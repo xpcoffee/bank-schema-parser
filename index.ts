@@ -2,12 +2,14 @@ import * as cli from "commander";
 
 cli
   .version("1.0.0")
+  .usage("--bank <bank> --statement-file <file>")
   .option(
     "-b, --bank <bank>",
     "The bank who's statement will be parsed",
     /^(fnb|standardbank)$/i,
     false
   )
+  .option("-f, --statement-file <file>", "The bank statement file to be parsed")
   .parse(process.argv);
 
 if (!cli.bank) {
@@ -15,8 +17,19 @@ if (!cli.bank) {
   process.exit(1);
 }
 
-function greeter(person) {
-  return "Hello " + person + "!";
+if (!cli.statementFile) {
+  console.error("Invalid bank statement file. Type --help for more details.");
+  process.exit(1);
 }
 
-console.log(greeter(cli.bank));
+interface Params {
+  bank: string;
+  statementFile: string;
+}
+
+function greeter({ bank, statementFile }: Params) {
+  return "Bank: " + bank + ", File: " + statementFile;
+}
+
+const params = (cli as any) as Params;
+console.log(greeter(params));
