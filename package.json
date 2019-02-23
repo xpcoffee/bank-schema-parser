@@ -1,0 +1,13 @@
+{
+  "name": "bank-statement-parse",
+  "version": "1.0.0",
+  "description": "Parse a bank statement and output JSON",
+  "main": "index.js",
+  "author": "Emerick Bosch <xpc.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^11.9.5",
+    "commander": "^2.19.0",
+    "typescript": "^3.3.3333"
+  }
+}
