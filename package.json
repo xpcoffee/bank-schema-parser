@@ -9,5 +9,8 @@
     "@types/node": "^11.9.5",
     "commander": "^2.19.0",
     "typescript": "^3.3.3333"
+  },
+  "scripts": {
+    "parse": "tsc index.ts && node index.js"
   }
 }
