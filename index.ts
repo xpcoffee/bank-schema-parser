@@ -1,7 +1,13 @@
 import * as program from "commander";
 import * as readline from "readline";
+import * as moment from "moment";
 import * as fs from "fs";
-import { Params } from "./types";
+import { Params, Transaction, Statement } from "./types";
+import {
+  TRANSACTION_SECTIONS,
+  STATEMENT_SECTIONS,
+  ACCOUNT_DETAILS_SECTIONS
+} from "./fnb";
 
 // Parse command-line input
 program
@@ -28,6 +34,38 @@ if (!program.statementFile) {
 
 const params = (program as any) as Params;
 
+// Parsing logic
+function parseFnbStatmentLine(line: string, memo: Statement): Statement {
+  const lineSections = line.split(",");
+
+  switch (lineSections[TRANSACTION_SECTIONS.STATEMENT_SECTION_NUMBER]) {
+    case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
+      memo.account = lineSections[ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
+      memo.bank = "FNB";
+      break;
+    case STATEMENT_SECTIONS.TRANSACTIONS:
+      try {
+        memo.transactions.push(transactionFromFnbLineSections(lineSections));
+      } catch {
+        // fail silently
+      }
+      break;
+  }
+  return memo;
+}
+
+function transactionFromFnbLineSections(lineSections: string[]): Transaction {
+  return {
+    description: lineSections[TRANSACTION_SECTIONS.DESCRIPTION],
+    amountInZAR: parseFloat(lineSections[TRANSACTION_SECTIONS.AMOUNT]),
+    timeStamp: toTimestamp(lineSections[TRANSACTION_SECTIONS.DATE])
+  };
+}
+
+function toTimestamp(date: string): string {
+  return moment(new Date(date).toISOString()).format();
+}
+
 // Read bank statement contents
 const fileStream = fs.createReadStream(params.statementFile);
 const rl = readline.createInterface({
@@ -35,4 +73,12 @@ const rl = readline.createInterface({
   crlfDelay: Infinity
 });
 
-rl.on("line", line => console.log(line));
+const statement: Statement = {
+  account: undefined,
+  bank: undefined,
+  transactions: []
+};
+
+rl.on("line", line => {
+  parseFnbStatmentLine(line, statement);
+}).on("close", () => console.log("%j", statement));
