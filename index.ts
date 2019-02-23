@@ -1,4 +1,5 @@
 import * as cli from "commander";
+import { Params } from "./types";
 
 cli
   .version("1.0.0")
@@ -20,11 +21,6 @@ if (!cli.bank) {
 if (!cli.statementFile) {
   console.error("Invalid bank statement file. Type --help for more details.");
   process.exit(1);
-}
-
-interface Params {
-  bank: string;
-  statementFile: string;
 }
 
 function greeter({ bank, statementFile }: Params) {
