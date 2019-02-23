@@ -1,7 +1,10 @@
-import * as cli from "commander";
+import * as program from "commander";
+import * as readline from "readline";
+import * as fs from "fs";
 import { Params } from "./types";
 
-cli
+// Parse command-line input
+program
   .version("1.0.0")
   .usage("--bank <bank> --statement-file <file>")
   .option(
@@ -13,19 +16,23 @@ cli
   .option("-f, --statement-file <file>", "The bank statement file to be parsed")
   .parse(process.argv);
 
-if (!cli.bank) {
+if (!program.bank) {
   console.error("Invalid bank name. Type --help for more details.");
   process.exit(1);
 }
 
-if (!cli.statementFile) {
+if (!program.statementFile) {
   console.error("Invalid bank statement file. Type --help for more details.");
   process.exit(1);
 }
 
-function greeter({ bank, statementFile }: Params) {
-  return "Bank: " + bank + ", File: " + statementFile;
-}
+const params = (program as any) as Params;
 
-const params = (cli as any) as Params;
-console.log(greeter(params));
+// Read bank statement contents
+const fileStream = fs.createReadStream(params.statementFile);
+const rl = readline.createInterface({
+  input: fileStream,
+  crlfDelay: Infinity
+});
+
+rl.on("line", line => console.log(line));
