@@ -1,5 +1,5 @@
 {
-  "name": "bank-statement-parse",
+  "name": "parse-bank-statement",
   "version": "1.0.0",
   "description": "Parse a bank statement and output JSON",
   "main": "index.js",
