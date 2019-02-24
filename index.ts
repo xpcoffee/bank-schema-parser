@@ -2,14 +2,12 @@ import * as program from "commander";
 import * as readline from "readline";
 import * as moment from "moment";
 import * as fs from "fs";
+import { Params, Transaction, Statement } from "./types";
 import {
-  Params,
-  Transaction,
-  Statement,
-  FNB_TRANSACTION_SECTIONS,
-  FNB_STATEMENT_SECTIONS,
-  FNB_ACCOUNT_DETAILS_SECTIONS
-} from "./types";
+  TRANSACTION_SECTIONS,
+  STATEMENT_SECTIONS,
+  ACCOUNT_DETAILS_SECTIONS
+} from "./fnb";
 
 // Parse command-line input
 program
@@ -40,12 +38,12 @@ const params = (program as any) as Params;
 function parseFnbStatmentLine(line: string, memo: Statement): Statement {
   const lineSections = line.split(",");
 
-  switch (lineSections[FNB_TRANSACTION_SECTIONS.STATEMENT_SECTION_NUMBER]) {
-    case FNB_STATEMENT_SECTIONS.ACCOUNT_DETAILS:
-      memo.account = lineSections[FNB_ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
+  switch (lineSections[TRANSACTION_SECTIONS.STATEMENT_SECTION_NUMBER]) {
+    case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
+      memo.account = lineSections[ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
       memo.bank = "FNB";
       break;
-    case FNB_STATEMENT_SECTIONS.TRANSACTIONS:
+    case STATEMENT_SECTIONS.TRANSACTIONS:
       try {
         memo.transactions.push(transactionFromFnbLineSections(lineSections));
       } catch {
@@ -58,9 +56,9 @@ function parseFnbStatmentLine(line: string, memo: Statement): Statement {
 
 function transactionFromFnbLineSections(lineSections: string[]): Transaction {
   return {
-    description: lineSections[FNB_TRANSACTION_SECTIONS.DESCRIPTION],
-    amountInZAR: parseFloat(lineSections[FNB_TRANSACTION_SECTIONS.AMOUNT]),
-    timeStamp: toTimestamp(lineSections[FNB_TRANSACTION_SECTIONS.DATE])
+    description: lineSections[TRANSACTION_SECTIONS.DESCRIPTION],
+    amountInZAR: parseFloat(lineSections[TRANSACTION_SECTIONS.AMOUNT]),
+    timeStamp: toTimestamp(lineSections[TRANSACTION_SECTIONS.DATE])
   };
 }
 
