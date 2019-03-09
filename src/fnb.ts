@@ -41,20 +41,24 @@ function toTimestamp(date: string): string {
 }
 
 export default function(line: string, memo: Statement): Statement {
+  const statement = Object.assign({}, memo);
   const lineSections = line.split(",");
 
   switch (lineSections[TRANSACTION_SECTIONS.STATEMENT_SECTION_NUMBER]) {
     case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
-      memo.account = lineSections[ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
-      memo.bank = "FNB";
+      statement.account = lineSections[ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
+      statement.bank = "FNB";
       break;
+
     case STATEMENT_SECTIONS.TRANSACTIONS:
       try {
-        memo.transactions.push(transactionFromFnbLineSections(lineSections));
+        statement.transactions.push(
+          transactionFromFnbLineSections(lineSections)
+        );
       } catch {
         // fail silently
       }
       break;
   }
-  return memo;
+  return statement;
 }

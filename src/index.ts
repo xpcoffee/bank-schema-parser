@@ -36,12 +36,19 @@ const rl = readline.createInterface({
   crlfDelay: Infinity
 });
 
-const statement: Statement = {
-  account: undefined,
-  bank: undefined,
-  transactions: []
-};
+function getEmptyStatement(): Statement {
+  const unknown = "UNKNOWN";
+  return {
+    account: unknown,
+    bank: unknown,
+    transactions: []
+  };
+}
+
+let statement = getEmptyStatement();
 
 rl.on("line", line => {
-  parseFnbStatment(line, statement);
-}).on("close", () => console.log("%j", statement));
+  statement = parseFnbStatment(line, statement);
+}).on("close", () => {
+  console.log("%j", statement);
+});

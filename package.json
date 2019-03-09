@@ -12,6 +12,9 @@
     "typescript": "^3.3.3333"
   },
   "scripts": {
-    "parse": "tsc index.ts && node index.js"
-  }
+    "build": "yarn run clean && mkdir -p build && tsc",
+    "parse": "node build/index.js",
+    "clean": "rm -rf build"
+  },
+  "bin": "./src/index.js"
 }
