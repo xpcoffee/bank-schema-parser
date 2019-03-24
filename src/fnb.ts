@@ -1,6 +1,8 @@
 import * as moment from "moment";
 import { Statement, Transaction } from "./types";
 
+const FNB = "FNB";
+
 const STATEMENT_SECTIONS = {
   ACCOUNT_DETAILS: "2",
   STATEMENT_INFO: "3",
@@ -47,7 +49,7 @@ export default function(line: string, memo: Statement): Statement {
   switch (lineSections[TRANSACTION_SECTIONS.STATEMENT_SECTION_NUMBER]) {
     case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
       statement.account = lineSections[ACCOUNT_DETAILS_SECTIONS.ACCOUNT_NUMBER];
-      statement.bank = "FNB";
+      statement.bank = FNB;
       break;
 
     case STATEMENT_SECTIONS.TRANSACTIONS:

@@ -2,7 +2,7 @@ import * as program from "commander";
 import * as fs from "fs";
 import * as readline from "readline";
 import parseFnbStatment from "./fnb";
-import { Params, Statement } from "./types";
+import { Params, Statement, StatementParser, ParsingFunction } from "./types";
 
 // Parse command-line input
 program
@@ -29,26 +29,33 @@ if (!program.statementFile) {
 
 const params = (program as any) as Params;
 
-// Read bank statement contents
-const fileStream = fs.createReadStream(params.statementFile);
-const rl = readline.createInterface({
-  input: fileStream,
-  crlfDelay: Infinity
-});
-
+const UKNOWN = "UNKNOWN";
 function getEmptyStatement(): Statement {
-  const unknown = "UNKNOWN";
   return {
-    account: unknown,
-    bank: unknown,
+    account: UKNOWN,
+    bank: UKNOWN,
     transactions: []
   };
 }
 
-let statement = getEmptyStatement();
+function getStatementParser<T>(
+  parsingFunction: ParsingFunction
+): StatementParser {
+  return async (file: string) => {
+    const fileStream = fs.createReadStream(file);
+    const rl = readline.createInterface({
+      input: fileStream,
+      crlfDelay: Infinity
+    });
 
-rl.on("line", line => {
-  statement = parseFnbStatment(line, statement);
-}).on("close", () => {
-  console.log("%j", statement);
-});
+    let memo = getEmptyStatement();
+    for await (const line of rl) {
+      memo = parsingFunction(line, memo);
+    }
+    return memo;
+  };
+}
+
+const parse = getStatementParser(parseFnbStatment);
+
+parse(params.statementFile).then(s => console.log("%j", s));

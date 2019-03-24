@@ -3,6 +3,9 @@ export interface Params {
   statementFile: string;
 }
 
+export type StatementParser = (file: string) => Promise<Statement>;
+export type ParsingFunction = (line: string, memo: Statement) => Statement;
+
 export interface Statement {
   account: string;
   bank: string;
