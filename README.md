@@ -1,14 +1,21 @@
 # parse-bank-statement
+
 Script to parse a bank statement and produce a JSON object
 
+## Dependencies
+
+- NodeJS 11 (necessary for [readline async iterator](https://nodejs.org/api/readline.html#readline_rl_symbol_asynciterator))
 
 ## Installing
 
 1. clone the repo
+
 ```
 git clone git@github.com:xpcoffee/parse-bank-statement.git
 ```
+
 1. install the dependencies
+
 ```
 yarn install
 ```
