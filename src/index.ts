@@ -1,8 +1,7 @@
 import * as program from "commander";
-import * as fs from "fs";
-import * as readline from "readline";
 import parseFnbStatment from "./fnb";
-import { Params, Statement, StatementParser, ParsingFunction } from "./types";
+import { Params } from "./types";
+import { getStatementParser } from "./statement";
 
 // Parse command-line input
 program
@@ -29,33 +28,9 @@ if (!program.statementFile) {
 
 const params = (program as any) as Params;
 
-const UKNOWN = "UNKNOWN";
-function getEmptyStatement(): Statement {
-  return {
-    account: UKNOWN,
-    bank: UKNOWN,
-    transactions: []
-  };
-}
-
-function getStatementParser<T>(
-  parsingFunction: ParsingFunction
-): StatementParser {
-  return async (file: string) => {
-    const fileStream = fs.createReadStream(file);
-    const rl = readline.createInterface({
-      input: fileStream,
-      crlfDelay: Infinity
-    });
-
-    let memo = getEmptyStatement();
-    for await (const line of rl) {
-      memo = parsingFunction(line, memo);
-    }
-    return memo;
-  };
-}
-
 const parse = getStatementParser(parseFnbStatment);
+const printJson = (s: {}) => console.log("%j", s);
 
-parse(params.statementFile).then(s => console.log("%j", s));
+parse(params.statementFile)
+  .then(printJson)
+  .catch(console.error);

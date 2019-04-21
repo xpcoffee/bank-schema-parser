@@ -10,6 +10,7 @@ export interface Statement {
   account: string;
   bank: string;
   transactions: Transaction[];
+  parsingErrors: string[];
 }
 
 export interface Transaction {
