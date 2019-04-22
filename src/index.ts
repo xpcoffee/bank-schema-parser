@@ -1,18 +1,14 @@
 import * as program from "commander";
-import parseFnbStatment from "./fnb";
-import { Params } from "./types";
+import parseFnbStatement from "./fnb";
+import parseStandardbankStatement from "./standardbank";
+import { Params, ParsingFunction } from "./types";
 import { getStatementParser } from "./statement";
 
 // Parse command-line input
 program
   .version("1.0.0")
   .usage("--bank <bank> --statement-file <file>")
-  .option(
-    "-b, --bank <bank>",
-    "The bank who's statement will be parsed",
-    /^(fnb|standardbank)$/i,
-    false
-  )
+  .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
   .option("-f, --statement-file <file>", "The bank statement file to be parsed")
   .parse(process.argv);
 
@@ -26,11 +22,30 @@ if (!program.statementFile) {
   process.exit(1);
 }
 
+enum Banks {
+  FNB = "fnb",
+  StandardBank = "standardbank",
+}
 const params = (program as any) as Params;
 
-const parse = getStatementParser(parseFnbStatment);
-const printJson = (s: {}) => console.log("%j", s);
+const getParseFn = (bank: string): ParsingFunction => {
+  switch (bank) {
+    case Banks.FNB:
+      return parseFnbStatement;
+    case Banks.StandardBank:
+      return parseStandardbankStatement;
+  }
 
-parse(params.statementFile)
-  .then(printJson)
-  .catch(console.error);
+  throw `Uknown bank ${bank}`;
+};
+
+try {
+  const parse = getStatementParser(getParseFn(params.bank));
+  const printJson = (s: {}) => console.log("%j", s);
+
+  parse(params.statementFile)
+    .then(printJson)
+    .catch(console.error);
+} catch (e) {
+  console.error(`[ERROR] ${e}`);
+}

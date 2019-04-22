@@ -14,73 +14,62 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
   const statement = Object.assign({}, memo);
   const lineSections = line.split(",");
 
-  switch (lineSections[STATEMENT_SECTION_NUMBER]) {
-    case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
-      const account = accountDetails(lineSections);
-      statement.account = account.accountNumber;
-      statement.bank = FNB;
-      break;
+  try {
+    switch (lineSections[STATEMENT_SECTION_NUMBER]) {
+      case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
+        const account = accountDetails(lineSections);
+        statement.account = account.accountNumber;
+        statement.bank = FNB;
+        break;
 
-    case STATEMENT_SECTIONS.STATEMENT_INFO:
-      const info = statementInfo(lineSections);
+      case STATEMENT_SECTIONS.STATEMENT_INFO:
+        const info = statementInfo(lineSections);
 
-      if (info.fromDate && info.toDate) {
-        const startDate = Date.parse(info.fromDate);
-        if (!isNaN(startDate)) {
-          statement.startDate = new Date(startDate);
+        if (info.fromDate && info.toDate) {
+          const startDate = Date.parse(info.fromDate);
+          if (!isNaN(startDate)) {
+            statement.startDate = new Date(startDate);
+          }
+
+          const endDate = Date.parse(info.toDate);
+          if (!isNaN(endDate)) {
+            statement.endDate = new Date(endDate);
+          }
+        }
+        break;
+
+      case STATEMENT_SECTIONS.TRANSACTIONS:
+        if (statement.startDate === undefined) {
+          throw "No start date found in the statement! Cannot infer dates.";
         }
 
-        const endDate = Date.parse(info.toDate);
-        if (!isNaN(endDate)) {
-          statement.endDate = new Date(endDate);
+        if (statement.endDate === undefined) {
+          throw "No end date found in the statement! Cannot infer dates.";
         }
-      }
-      break;
 
-    case STATEMENT_SECTIONS.TRANSACTIONS:
-      if (statement.startDate === undefined) {
-        throw "No start date found in the statement! Cannot infer dates.";
-      }
-
-      if (statement.endDate === undefined) {
-        throw "No end date found in the statement! Cannot infer dates.";
-      }
-
-      try {
         statement.transactions.push(
-          transactionFromFnbLineSections(
-            lineSections,
-            statement.startDate,
-            statement.endDate
-          )
+          transactionFromFnbLineSections(lineSections, statement.startDate, statement.endDate),
         );
-      } catch (e) {
-        statement.parsingErrors.push(e);
-      }
-      break;
+        break;
+    }
+  } catch (e) {
+    statement.parsingErrors.push(e);
   }
+
   return statement;
 }
 
-function transactionFromFnbLineSections(
-  lineSections: string[],
-  startDate: Date,
-  endDate: Date
-): Transaction {
+function transactionFromFnbLineSections(lineSections: string[], startDate: Date, endDate: Date): Transaction {
   const line = transaction(lineSections);
 
   return {
     description: line.description.replace(/"/g, ""),
     amountInZAR: parseFloat(line.amount),
-    timeStamp: toTimestamp(line.date, startDate, endDate)
+    timeStamp: toTimestamp(line.date, startDate, endDate),
   };
 }
 
-function toTimestamp(
-  dateString: string,
-  startDate: Date,
-  endDate: Date
-): string {
+function toTimestamp(dateString: string, startDate: Date, endDate: Date): string {
   if (isNaN(Date.parse(dateString))) {
     throw `Cannot convert to timestamp: ${dateString}`;
   }
@@ -109,7 +98,7 @@ export const STATEMENT_SECTIONS = {
   STATEMENT_INFO: "3",
   SUMMARY: "4",
   TRANSACTIONS: "5",
-  END: "6"
+  END: "6",
 };
 
 // Index of line section that gives tells us what section we're in
@@ -118,7 +107,7 @@ const STATEMENT_SECTION_NUMBER = 0;
 const accountDetails = (lineSections: string[]) => ({
   accountNumber: lineSections[1],
   name: lineSections[2],
-  type: lineSections[3]
+  type: lineSections[3],
 });
 
 const statementInfo = (lineSections: string[]) => ({
@@ -127,7 +116,7 @@ const statementInfo = (lineSections: string[]) => ({
   toDate: lineSections[3],
   openingBalance: lineSections[4],
   closingBalance: lineSections[5],
-  vatPaid: lineSections[6]
+  vatPaid: lineSections[6],
 });
 
 const transaction = (lineSections: string[]) => ({
@@ -138,5 +127,5 @@ const transaction = (lineSections: string[]) => ({
   obtuseDescription: lineSections[5],
   amount: lineSections[6],
   balance: lineSections[7],
-  accruedCharges: lineSections[8]
+  accruedCharges: lineSections[8],
 });

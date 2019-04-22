@@ -23,7 +23,7 @@
     "build": "yarn run clean && mkdir -p build && tsc",
     "parse": "node build/index.js",
     "clean": "rm -rf build",
-    "test": "jest"
+    "test": "yarn build && jest"
   },
   "bin": "./src/index.js"
 }
