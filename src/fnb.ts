@@ -1,5 +1,6 @@
 import * as moment from "moment";
 import { Statement, Transaction } from "./types";
+import hash from "./hash";
 
 const FNB = "FNB";
 
@@ -12,18 +13,17 @@ const FNB = "FNB";
  */
 export default function(line: string, memo: FnbStatement): FnbStatement {
   const statement = Object.assign({}, memo);
-  const lineSections = line.split(",");
 
   try {
-    switch (lineSections[STATEMENT_SECTION_NUMBER]) {
-      case STATEMENT_SECTIONS.ACCOUNT_DETAILS:
-        const account = accountDetails(lineSections);
+    switch (getSection(line)) {
+      case StatementSection.AccountDetails:
+        const account = accountDetailsLine(line.split(","));
         statement.account = account.accountNumber;
         statement.bank = FNB;
         break;
 
-      case STATEMENT_SECTIONS.STATEMENT_INFO:
-        const info = statementInfo(lineSections);
+      case StatementSection.StatementInfo:
+        const info = statementInfoLine(line.split(","));
 
         if (info.fromDate && info.toDate) {
           const startDate = Date.parse(info.fromDate);
@@ -38,7 +38,7 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
         }
         break;
 
-      case STATEMENT_SECTIONS.TRANSACTIONS:
+      case StatementSection.Transaction:
         if (statement.startDate === undefined) {
           throw "No start date found in the statement! Cannot infer dates.";
         }
@@ -47,9 +47,7 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
           throw "No end date found in the statement! Cannot infer dates.";
         }
 
-        statement.transactions.push(
-          transactionFromFnbLineSections(lineSections, statement.startDate, statement.endDate),
-        );
+        statement.transactions.push(transactionFromFnbLineSections(line, statement.startDate, statement.endDate));
         break;
     }
   } catch (e) {
@@ -59,13 +57,14 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
   return statement;
 }
 
-function transactionFromFnbLineSections(lineSections: string[], startDate: Date, endDate: Date): Transaction {
-  const line = transaction(lineSections);
+function transactionFromFnbLineSections(line: string, startDate: Date, endDate: Date): Transaction {
+  const lineSections = transactionLine(line.split(","));
 
   return {
-    description: line.description.replace(/"/g, ""),
-    amountInZAR: parseFloat(line.amount),
-    timeStamp: toTimestamp(line.date, startDate, endDate),
+    description: lineSections.description.replace(/"/g, ""),
+    amountInZAR: parseFloat(lineSections.amount),
+    timeStamp: toTimestamp(lineSections.date, startDate, endDate),
+    hash: hash(line),
   };
 }
 
@@ -93,24 +92,42 @@ export interface FnbStatement extends Statement {
   endDate?: Date;
 }
 
-export const STATEMENT_SECTIONS = {
-  ACCOUNT_DETAILS: "2",
-  STATEMENT_INFO: "3",
-  SUMMARY: "4",
-  TRANSACTIONS: "5",
-  END: "6",
+enum StatementSection {
+  AccountDetails,
+  StatementInfo,
+  Summary,
+  Transaction,
+  End,
+  Unknown,
+}
+
+const getSection = (line: string) => {
+  if (line.startsWith("2")) {
+    return StatementSection.AccountDetails;
+  }
+  if (line.startsWith("3")) {
+    return StatementSection.StatementInfo;
+  }
+  if (line.startsWith("4")) {
+    return StatementSection.Summary;
+  }
+  if (line.startsWith("5")) {
+    return StatementSection.Transaction;
+  }
+  if (line.startsWith("6")) {
+    return StatementSection.End;
+  }
+
+  return StatementSection.Unknown;
 };
 
-// Index of line section that gives tells us what section we're in
-const STATEMENT_SECTION_NUMBER = 0;
-
-const accountDetails = (lineSections: string[]) => ({
+const accountDetailsLine = (lineSections: string[]) => ({
   accountNumber: lineSections[1],
   name: lineSections[2],
   type: lineSections[3],
 });
 
-const statementInfo = (lineSections: string[]) => ({
+const statementInfoLine = (lineSections: string[]) => ({
   statementNumber: lineSections[1],
   fromDate: lineSections[2],
   toDate: lineSections[3],
@@ -119,7 +136,7 @@ const statementInfo = (lineSections: string[]) => ({
   vatPaid: lineSections[6],
 });
 
-const transaction = (lineSections: string[]) => ({
+const transactionLine = (lineSections: string[]) => ({
   transactionNumber: lineSections[1],
   date: lineSections[2],
   type: lineSections[3],

@@ -1,5 +1,6 @@
 import { Statement, Transaction } from "./types";
-import moment = require("moment");
+import * as moment from "moment";
+import hash from "./hash";
 
 const STANDARD_BANK = "StandardBank";
 
@@ -56,6 +57,7 @@ const toTransaction = (line: string): Transaction => {
     amountInZAR: Number(lineSections.amount),
     description: lineSections.description,
     timeStamp: toTimeStamp(toDateString(lineSections.dateString)),
+    hash: hash(line),
   };
 };
 

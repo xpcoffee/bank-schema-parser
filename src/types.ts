@@ -17,4 +17,5 @@ export interface Transaction {
   timeStamp: string;
   amountInZAR: number;
   description: string;
+  hash: number;
 }
