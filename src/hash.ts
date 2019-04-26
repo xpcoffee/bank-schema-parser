@@ -1,9 +1,9 @@
-export default (str: string): number => {
+export default (str: string): string => {
   let hash = 0;
   let chr;
 
   if (str.length === 0) {
-    return hash;
+    return hash.toString();
   }
 
   for (let i = 0; i < str.length; i++) {
@@ -12,5 +12,5 @@ export default (str: string): number => {
     hash |= 0; // Convert to 32bit integer
   }
 
-  return hash;
+  return hash.toString();
 };

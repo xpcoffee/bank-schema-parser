@@ -3,6 +3,7 @@ import parseFnbStatement from "./fnb";
 import parseStandardbankStatement from "./standardbank";
 import { Params, ParsingFunction } from "./types";
 import { getStatementParser } from "./statement";
+import deduplicate from "./deduplicate";
 
 // Parse command-line input
 program
@@ -44,6 +45,7 @@ try {
   const printJson = (s: {}) => console.log("%j", s);
 
   parse(params.statementFile)
+    .then(deduplicate)
     .then(printJson)
     .catch(console.error);
 } catch (e) {
