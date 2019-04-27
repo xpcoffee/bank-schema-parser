@@ -8,9 +8,9 @@ import deduplicate from "./deduplicate";
 // Parse command-line input
 program
   .version("1.0.0")
-  .usage("--bank <bank> --statement-file <file>")
+  .usage("--bank <bank> --file <file>")
   .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
-  .option("-f, --statement-file <file>", "The bank statement file to be parsed")
+  .option("-f, --file <file>", "The bank statement file to be parsed")
   .parse(process.argv);
 
 if (!program.bank) {
@@ -18,7 +18,7 @@ if (!program.bank) {
   process.exit(1);
 }
 
-if (!program.statementFile) {
+if (!program.file) {
   console.error("Invalid bank statement file. Type --help for more details.");
   process.exit(1);
 }
@@ -44,7 +44,7 @@ try {
   const parse = getStatementParser(getParseFn(params.bank));
   const printJson = (s: {}) => console.log("%j", s);
 
-  parse(params.statementFile)
+  parse(params.file)
     .then(deduplicate)
     .then(printJson)
     .catch(console.error);

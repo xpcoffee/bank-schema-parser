@@ -1,6 +1,6 @@
 export interface Params {
   bank: string;
-  statementFile: string;
+  file: string;
 }
 
 export type StatementParser = (file: string) => Promise<Statement>;

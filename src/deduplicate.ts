@@ -1,4 +1,6 @@
-import { Statement } from "./types";
+import { Statement, Transaction } from "./types";
+
+type Dict<T> = { [key: string]: T };
 
 /**
  * This deduplicates hashes in the set.
@@ -8,12 +10,16 @@ import { Statement } from "./types";
  */
 const deduplicate = (untreatedStatement: Statement): Statement => {
   const statement = Object.assign({}, untreatedStatement);
-  const dict = {};
+  const dict: Dict<Transaction> = {};
 
   statement.transactions.forEach(transaction => {
     const hash = transaction.hash.toString();
     if (dict[hash]) {
-      const newHash = `${hash}D`;
+      let newHash = `${hash}D`;
+      while (dict[newHash]) {
+        newHash = `${newHash}D`;
+      }
+
       const newTransaction = Object.assign({}, transaction);
       newTransaction.hash = newHash;
       dict[newHash] = newTransaction;
