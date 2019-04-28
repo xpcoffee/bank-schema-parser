@@ -14,4 +14,17 @@ describe("standardbank", () => {
     expect(parsedTransaction.timeStamp).toEqual("2018-11-21T00:00:00+02:00");
     expect(parsedTransaction.balance).toEqual(-50);
   });
+
+  it("calculates a running balance for each transaction", () => {
+    const lines = [
+      ",0,OPEN,1000,OPEN BALANCE,,0,0",
+      "HIST,20181121,,200.22,IB PAYMENT FROM,foo,1234,0",
+      "HIST,20181121,,-100.01,IB PAYMENT FROM,bar,1234,0",
+    ];
+
+    let statement: StandardBankStatement = getEmptyStatement();
+    lines.forEach(line => (statement = standardbank(line, statement)));
+
+    expect(statement.runningBalance).toEqual(1100.21);
+  });
 });

@@ -22,6 +22,7 @@ export default function(line: string, memo: StandardBankStatement): StandardBank
         break;
       case Section.OpeningBalance:
         statement.runningBalance = getBalance(line);
+        break;
 
       case Section.Transaction:
         if (statement.runningBalance === undefined) {
@@ -70,7 +71,7 @@ const sectionType = (line: string): Section => {
     return Section.OpeningBalance;
   }
   if (line.startsWith(",0,CLOSE")) {
-    return Section.OpeningBalance;
+    return Section.ClosingBalance;
   }
   return Section.Unknown;
 };
