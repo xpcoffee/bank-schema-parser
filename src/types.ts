@@ -18,4 +18,5 @@ export interface Transaction {
   amountInZAR: number;
   description: string;
   hash: string;
+  balance: number;
 }

@@ -65,6 +65,7 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
     amountInZAR: parseFloat(lineSections.amount),
     timeStamp: toTimestamp(lineSections.date, startDate, endDate),
     hash: hash(line),
+    balance: Number(lineSections.balance),
   };
 }
 
