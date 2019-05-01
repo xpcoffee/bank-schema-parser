@@ -9,6 +9,7 @@ describe("deduplicate", () => {
       description: "bar",
       amountInZAR: 20,
       hash: "1234",
+      balance: 10,
     };
 
     statement.transactions.push(txn);
