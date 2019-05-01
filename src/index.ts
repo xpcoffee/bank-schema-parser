@@ -1,6 +1,7 @@
 import * as program from "commander";
 import parseFnbStatement from "./fnb";
 import parseStandardbankStatement from "./standardbank";
+import parseHandmadeStandardbankStatement from "./standardbankHandmade";
 import { Params, ParsingFunction } from "./types";
 import { getStatementParser } from "./statement";
 import deduplicate from "./deduplicate";
@@ -8,9 +9,10 @@ import deduplicate from "./deduplicate";
 // Parse command-line input
 program
   .version("1.0.0")
-  .usage("--bank <bank> --file <file>")
+  .usage("--bank <bank> --file <file> [--handmade]")
   .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
   .option("-f, --file <file>", "The bank statement file to be parsed")
+  .option("--handmade", "Use for statements with the 'handmade' format")
   .parse(process.argv);
 
 if (!program.bank) {
@@ -34,7 +36,7 @@ const getParseFn = (bank: string): ParsingFunction => {
     case Banks.FNB:
       return parseFnbStatement;
     case Banks.StandardBank:
-      return parseStandardbankStatement;
+      return program.handmade ? parseHandmadeStandardbankStatement : parseStandardbankStatement;
   }
 
   throw `Uknown bank ${bank}`;
