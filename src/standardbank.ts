@@ -81,14 +81,17 @@ const getAccountNumber = (line: string): string => line.split(",")[1];
 const getBalance = (line: string): number => Number(line.split(",")[3]);
 
 const toTransaction = (line: string, currentBalance: number): Transaction => {
-  const lineSections = transactionLine(line.split(","));
-  const amount = Number(lineSections.amount);
+  const [section, stdBankDateString, unknown, amountStr, transactionType, description, code, unknown2] = line.split(
+    ",",
+  );
+
+  const amount = Number(amountStr);
   const newBalance = add(currentBalance, amount);
 
   return {
-    amountInZAR: Number(lineSections.amount),
-    description: lineSections.description,
-    timeStamp: toTimeStamp(toDateString(lineSections.dateString)),
+    amountInZAR: amount,
+    description: description,
+    timeStamp: toTimeStamp(toDateString(stdBankDateString)),
     /**
      * [NB!] The hash must not contain the balance - this would break idempotency.
      * We infer the balance for StandardBank in a way that is order dependent,
@@ -111,13 +114,3 @@ const toTimeStamp = (dateString: string) => moment(dateString).format();
 
 const toDateString = (standardBankDateString: string): string =>
   [standardBankDateString.slice(0, 4), standardBankDateString.slice(4, 6), standardBankDateString.slice(6)].join("-");
-
-const transactionLine = (lineSections: string[]) => ({
-  dateString: lineSections[1],
-  unknown: lineSections[2],
-  amount: lineSections[3],
-  transactionType: lineSections[4],
-  description: lineSections[5],
-  code: lineSections[6],
-  unknown2: lineSections[7],
-});

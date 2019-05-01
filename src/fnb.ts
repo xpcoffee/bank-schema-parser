@@ -17,21 +17,23 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
   try {
     switch (getSection(line)) {
       case StatementSection.AccountDetails:
-        const account = accountDetailsLine(line.split(","));
-        statement.account = account.accountNumber;
+        const [accSection, accountNumber, name, type] = line.split(",");
+        statement.account = accountNumber;
         statement.bank = FNB;
         break;
 
       case StatementSection.StatementInfo:
-        const info = statementInfoLine(line.split(","));
+        const [stmtSection, statementNumber, fromDate, toDate, openingBalance, closingBalance, vatPaid] = line.split(
+          ",",
+        );
 
-        if (info.fromDate && info.toDate) {
-          const startDate = Date.parse(info.fromDate);
+        if (fromDate && toDate) {
+          const startDate = Date.parse(fromDate);
           if (!isNaN(startDate)) {
             statement.startDate = new Date(startDate);
           }
 
-          const endDate = Date.parse(info.toDate);
+          const endDate = Date.parse(toDate);
           if (!isNaN(endDate)) {
             statement.endDate = new Date(endDate);
           }
@@ -58,14 +60,24 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
 }
 
 function transactionFromFnbLineSections(line: string, startDate: Date, endDate: Date): Transaction {
-  const lineSections = transactionLine(line.split(","));
+  const [
+    section,
+    transactionNumber,
+    date,
+    type,
+    description,
+    obtuseDescription,
+    amount,
+    balance,
+    accruedCharges,
+  ] = line.split(",");
 
   return {
-    description: lineSections.description.replace(/"/g, ""),
-    amountInZAR: parseFloat(lineSections.amount),
-    timeStamp: toTimestamp(lineSections.date, startDate, endDate),
+    description: description.replace(/"/g, ""),
+    amountInZAR: Number(amount),
+    timeStamp: toTimestamp(date, startDate, endDate),
     hash: hash(line),
-    balance: Number(lineSections.balance),
+    balance: Number(balance),
   };
 }
 
@@ -121,29 +133,3 @@ const getSection = (line: string) => {
 
   return StatementSection.Unknown;
 };
-
-const accountDetailsLine = (lineSections: string[]) => ({
-  accountNumber: lineSections[1],
-  name: lineSections[2],
-  type: lineSections[3],
-});
-
-const statementInfoLine = (lineSections: string[]) => ({
-  statementNumber: lineSections[1],
-  fromDate: lineSections[2],
-  toDate: lineSections[3],
-  openingBalance: lineSections[4],
-  closingBalance: lineSections[5],
-  vatPaid: lineSections[6],
-});
-
-const transactionLine = (lineSections: string[]) => ({
-  transactionNumber: lineSections[1],
-  date: lineSections[2],
-  type: lineSections[3],
-  description: lineSections[4],
-  obtuseDescription: lineSections[5],
-  amount: lineSections[6],
-  balance: lineSections[7],
-  accruedCharges: lineSections[8],
-});
