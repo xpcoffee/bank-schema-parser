@@ -8,13 +8,13 @@ Script to parse a bank statement and produce a JSON object
 
 ## Installing
 
-1. clone the repo
+Clone the repo
 
 ```
 git clone git@github.com:xpcoffee/parse-bank-statement.git
 ```
 
-1. install the dependencies
+Install the dependencies
 
 ```
 yarn install
