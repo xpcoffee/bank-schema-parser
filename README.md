@@ -43,3 +43,26 @@ Options:
 ```
 yarn run parse --bank fnb -statement-file ~/Downloads/my-fnb-bank-statement.csv
 ```
+
+## JSON output structure
+
+The output of the command has the following structure:
+
+```json
+{
+  account: "1234567890",
+  bank: "FNB",
+  transactions: [
+    {
+      timeStamp: "2019-01-01T00:00:00Z",
+      amountInZAR: -5000,
+      description: "SOME DESCRIPTION",
+      hash: "2019-01-01T00:00:00Z-5000SOMEDESCRIPTION",
+      balance: 11520
+    }
+  ],
+  parsingErrors: [
+    "some problem was encountered when doing X"
+  ]
+}
+```
