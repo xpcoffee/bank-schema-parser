@@ -4,8 +4,8 @@ import * as moment from "moment";
 
 /**
  * Parses statements that are "handmade" i.e. that have been created from PDF statements.
- * PDF statments have fewer overall fields, but more transaction information that regular statments
- * (noteably the transactions contain balances), so a different function is required to parse them.
+ * PDF statements have fewer overall fields, but more transaction information that regular statements
+ * (notably the transactions contain balances), so a different function is required to parse them.
  */
 const parseStandardBankBackfill: ParsingFunction = function(line: string, memo: Statement): Statement {
   const statement = Object.assign({}, memo);
@@ -58,7 +58,7 @@ function toTransaction(line: string): Transaction {
     /**
      * [NB]: We do not include the balance in the hash: normal statements do not
      * contain balances at a transaction level; we want transactions from handmade
-     * statements to still be idempotent with transactions in regular statments.
+     * statements to still be idempotent with transactions in regular statements.
      */
     hash: hash([section, desc, amount, date].join(",")),
   };
