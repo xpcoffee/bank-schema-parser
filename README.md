@@ -28,19 +28,20 @@ yarn run parse --help
 
 ## Usage
 
-```
-Usage: index --bank <bank> --statement-file <file>
+```bash
+Usage: index --bank <bank> --file <file> [--handmade]
 
 Options:
-  -V, --version                output the version number
-  -b, --bank <bank>            The bank who's statement will be parsed (default: false)
-  -f, --statement-file <file>  The bank statement file to be parsed
-  -h, --help                   output usage information
+  -V, --version      output the version number
+  -b, --bank <bank>  The bank who's statement will be parsed (default: false)
+  -f, --file <file>  The bank statement file to be parsed
+  -hm, --handmade    Use for statements with the 'handmade' format
+  -h, --help         output usage information
 ```
 
 ## Example
 
-```
+```bash
 yarn run parse --bank fnb -statement-file ~/Downloads/my-fnb-bank-statement.csv
 ```
 
@@ -66,3 +67,9 @@ The output of the command has the following structure:
   ]
 }
 ```
+
+## Handmade statements
+
+Sometimes we can't get statements in CSV format and we need to manually enter the data.
+"Handmade" statements are statements with manually entered data that have a different
+format for ease of data-entry.

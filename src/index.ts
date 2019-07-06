@@ -12,7 +12,7 @@ program
   .usage("--bank <bank> --file <file> [--handmade]")
   .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
   .option("-f, --file <file>", "The bank statement file to be parsed")
-  .option("--handmade", "Use for statements with the 'handmade' format")
+  .option("-hm, --handmade", "Use for statements with the 'handmade' format")
   .parse(process.argv);
 
 if (!program.bank) {
