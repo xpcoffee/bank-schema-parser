@@ -2,7 +2,7 @@ import { Statement, Transaction } from "./types";
 import * as moment from "moment";
 import hash from "./hash";
 
-const STANDARD_BANK = "StandardBank";
+export const STANDARD_BANK = "StandardBank";
 
 /**
  * Parses a line from StandardBank statement.

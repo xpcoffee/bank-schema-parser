@@ -39,7 +39,7 @@ const getParseFn = (bank: string): ParsingFunction => {
       return program.handmade ? parseHandmadeStandardbankStatement : parseStandardbankStatement;
   }
 
-  throw `Uknown bank ${bank}`;
+  throw `Unknown bank ${bank}`;
 };
 
 try {
