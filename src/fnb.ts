@@ -72,8 +72,11 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
     accruedCharges,
   ] = line.split(",");
 
+  const cleanDescription = description.replace(/"/g, "");
+  const nonEmptyDescription = cleanDescription.length ? cleanDescription: type.replace(/"/g, "");
+
   return {
-    description: description.replace(/"/g, ""),
+    description: nonEmptyDescription,
     amountInZAR: Number(amount),
     timeStamp: toTimestamp(date, startDate, endDate),
     hash: hash(line),
@@ -92,7 +95,7 @@ function toTimestamp(dateString: string, startDate: Date, endDate: Date): string
   // 1. start by assigning the startDate year
   date.setFullYear(startDate.getFullYear());
 
-  // 2.increase the year if the date doesn't fall in the statment's date range
+  // 2.increase the year if the date doesn't fall in the statement's date range
   while (!(date >= startDate && date <= endDate)) {
     date.setFullYear(date.getFullYear() + 1);
   }
