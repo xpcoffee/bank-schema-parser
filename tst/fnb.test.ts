@@ -1,3 +1,4 @@
+import {validateTransaction} from "bank-schema";
 import fnb, { FnbStatement } from "../src/fnb";
 import { getEmptyStatement } from "../src/statement";
 
@@ -11,6 +12,7 @@ describe("fnb", () => {
 
     const parsedTransaction = fnb(transactionLine, statement).transactions[0];
 
+    expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
     expect(parsedTransaction.amountInZAR).toEqual(150);
     expect(parsedTransaction.description).toEqual("bar");
     expect(parsedTransaction.timeStamp).toEqual("2019-09-25T00:00:00+02:00");
