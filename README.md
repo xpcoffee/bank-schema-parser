@@ -10,20 +10,28 @@ Script to parse a bank statement and produce a JSON object
 
 Clone the repo
 
-```
-git clone git@github.com:xpcoffee/parse-bank-statement.git
-```
-
-Install the dependencies
-
-```
-yarn install
+```bash
+git clone git@github.com:xpcoffee/parse-bank-statement.git \
+&& cd parse-bank-statement
 ```
 
-## Running locally
+Install dependencies
 
+```bash
+npm run install
 ```
-yarn run parse --help
+
+Build the project and install the binary
+
+```bash
+npm run build \
+&& npm -g install
+```
+
+Try it out
+
+```bash
+parse-bank-statement --help
 ```
 
 ## Usage
