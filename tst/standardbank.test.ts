@@ -1,3 +1,4 @@
+import {validateTransaction} from "bank-schema";
 import { getEmptyStatement } from "../src/statement";
 import standardbank, { StandardBankStatement } from "../src/standardbank";
 
@@ -9,6 +10,7 @@ describe("standardbank", () => {
     statement.runningBalance = 100;
     const parsedTransaction = standardbank(transactionLine, statement).transactions[0];
 
+    expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
     expect(parsedTransaction.amountInZAR).toEqual(-150);
     expect(parsedTransaction.description).toEqual("bar");
     expect(parsedTransaction.timeStamp).toEqual("2018-11-21T00:00:00+02:00");
