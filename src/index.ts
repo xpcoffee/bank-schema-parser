@@ -1,3 +1,6 @@
+#!/usr/bin/env node
+"use strict";
+
 import * as program from "commander";
 import parseFnbStatement from "./fnb";
 import parseStandardbankStatement from "./standardbank";
