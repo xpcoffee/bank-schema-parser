@@ -26,5 +26,5 @@
     "clean": "rm -rf build",
     "test": "jest"
   },
-  "bin": "./src/index.js"
+  "bin": "./build/index.js"
 }
