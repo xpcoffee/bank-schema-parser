@@ -4,6 +4,8 @@
   "compilerOptions": {
     "strictNullChecks": true,
     "outDir": "./build",
-    "strict": true
+    "strict": true,
+    "target": "es6",
+    "module": "commonjs"
   }
 }
