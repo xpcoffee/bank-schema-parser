@@ -3,19 +3,20 @@
 
 import * as program from "commander";
 import parseFnbStatement from "./fnb";
+import parseFnbTransactionHistory from "./fnbDownloaded";
 import parseStandardbankStatement from "./standardbank";
 import parseHandmadeStandardbankStatement from "./standardbankHandmade";
 import { Params, ParsingFunction } from "./types";
 import { getStatementParser } from "./statement";
-import deduplicate from "./deduplicate";
+import deduplicateTransactions from "./deduplicate";
 
 // Parse command-line input
 program
   .version("1.0.0")
-  .usage("--bank <bank> --file <file> [--handmade]")
+  .usage("--bank <bank> --file <file> [--type <type>]")
   .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
   .option("-f, --file <file>", "The bank statement file to be parsed")
-  .option("-hm, --handmade", "Use for statements with the 'handmade' format")
+  .option("-t, --type <type>", "Use to specify the type of input file. Can be DEFAULT, TRANSACTION_HISTORY or HANDMADE. Uses DEFAULT if the option is unspecified.")
   .parse(process.argv);
 
 if (!program.bank) {
@@ -32,25 +33,39 @@ enum Banks {
   FNB = "fnb",
   StandardBank = "standardbank",
 }
+enum InputFileTypes {
+  Default = "DEFAULT",
+  Handmade = "HANDMADE",
+  TransactionHistory = "TRANSACTION_HISTORY"
+}
 const params = (program as any) as Params;
 
-const getParseFn = (bank: string): ParsingFunction => {
-  switch (bank) {
-    case Banks.FNB:
-      return parseFnbStatement;
-    case Banks.StandardBank:
-      return program.handmade ? parseHandmadeStandardbankStatement : parseStandardbankStatement;
+/**
+ * Factory function for getting a parsing function
+ */
+const getParseFn = ({ bank, type = InputFileTypes.Default }: { bank: string, type?: string }): ParsingFunction => {
+  if (bank === Banks.FNB && type === InputFileTypes.Default) {
+    return parseFnbStatement;
+  }
+  if (bank === Banks.FNB && type === InputFileTypes.TransactionHistory) {
+    return parseFnbTransactionHistory;
+  }
+  if (bank === Banks.StandardBank && type === InputFileTypes.Default) {
+    return parseStandardbankStatement;
+  }
+  if (bank === Banks.StandardBank && type === InputFileTypes.Handmade) {
+    return parseHandmadeStandardbankStatement;
   }
 
   throw `Unknown bank ${bank}`;
 };
 
 try {
-  const parse = getStatementParser(getParseFn(params.bank));
+  const parse = getStatementParser(getParseFn({ bank: params.bank, type: params.type }));
   const printJson = (s: {}) => console.log("%j", s);
 
   parse(params.file)
-    .then(deduplicate)
+    .then(deduplicateTransactions)
     .then(printJson)
     .catch(console.error);
 } catch (e) {

@@ -1,6 +1,6 @@
 {
   "name": "parse-bank-statement",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Parse a bank statement and output JSON",
   "main": "src/index.ts",
   "author": "Emerick Bosch <xpc.dev@gmail.com>",
