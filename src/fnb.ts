@@ -11,7 +11,7 @@ const FNB = "FNB";
  * @param memo - the statement with which the parsed data should be combined
  * @returns statement - the statement with more data parsed in
  */
-export default function(line: string, memo: FnbStatement): FnbStatement {
+export default function (line: string, memo: FnbStatement): FnbStatement {
   const statement = Object.assign({}, memo);
 
   try {
@@ -49,6 +49,10 @@ export default function(line: string, memo: FnbStatement): FnbStatement {
           throw "No end date found in the statement! Cannot infer dates.";
         }
 
+        if (statement.startDate > statement.endDate) {
+          throw "Start date cannot be greater than the end date!";
+        }
+
         statement.transactions.push(transactionFromFnbLineSections(line, statement.startDate, statement.endDate));
         break;
     }
@@ -73,7 +77,7 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
   ] = line.split(",");
 
   const cleanDescription = description.replace(/"/g, "");
-  const nonEmptyDescription = cleanDescription.length ? cleanDescription: type.replace(/"/g, "");
+  const nonEmptyDescription = cleanDescription.length ? cleanDescription : type.replace(/"/g, "");
 
   return {
     description: nonEmptyDescription,
