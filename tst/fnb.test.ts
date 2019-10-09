@@ -1,5 +1,5 @@
-import {validateTransaction} from "bank-schema";
-import fnb, { FnbStatement } from "../src/fnb";
+import { validateTransaction } from "bank-schema";
+import fnb, { FnbStatement } from "../src/fnbStatement";
 import { getEmptyStatement } from "../src/statement";
 
 describe("fnb", () => {

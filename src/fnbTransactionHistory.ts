@@ -42,7 +42,7 @@ function transactionFromFnbLineSections(line: string): Transaction {
   ] = line.split(",");
 
   return {
-    description: description,
+    description: description.trim(),
     amountInZAR: Number(amount),
     timeStamp: toTimestamp(date),
     hash: hash(line),
@@ -57,11 +57,6 @@ function toTimestamp(dateString: string): string {
 
   const date = new Date(dateString);
   return moment(date.toISOString()).format();
-}
-
-export interface FnbStatement extends Statement {
-  startDate?: Date;
-  endDate?: Date;
 }
 
 enum StatementSection {

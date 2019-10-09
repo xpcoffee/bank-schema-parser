@@ -1,14 +1,14 @@
 import { ParsingFunction, Statement, Transaction } from "./types";
 import hash from "./hash";
 import * as moment from "moment";
-import { STANDARD_BANK } from "./standardbank";
+import { STANDARD_BANK } from "./standardbankStatement";
 
 /**
  * Parses statements that are "handmade" i.e. that have been created from PDF statements.
  * PDF statements have fewer overall fields, but more transaction information that regular statements
  * (notably the transactions contain balances), so a different function is required to parse them.
  */
-const parseStandardBankBackfill: ParsingFunction = function(line: string, memo: Statement): Statement {
+const parseStandardBankBackfill: ParsingFunction = function (line: string, memo: Statement): Statement {
   const statement = Object.assign({}, memo);
 
   switch (getSection(line)) {
