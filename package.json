@@ -29,5 +29,5 @@
     "test": "jest",
     "postinstall": "tsc"
   },
-  "bin": "./dist/cli.js"
+  "bin": "./dist/bin/bank-schema-parser"
 }
