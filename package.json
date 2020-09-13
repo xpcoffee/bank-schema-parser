@@ -23,11 +23,11 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "build": "npm run clean && mkdir dist && tsc",
-    "parse": "node dist/cli.js",
+    "build": "npm run clean && mkdir dist && tsc && cp -R bin dist",
+    "parse": "node dist/bin/bank-schema-parser",
     "clean": "rm -rf dist",
     "test": "jest",
-    "prepack": "npm run build"
+    "postinstall": "tsc"
   },
   "bin": "./dist/cli.js"
 }
