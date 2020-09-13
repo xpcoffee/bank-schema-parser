@@ -1,17 +1,23 @@
-# parse-bank-statement
+# bank-schema-parser
 
-Script to parse a bank statement and produce a JSON object that conforms to [bank-schema](https://github.com/xpcoffee/bank-schema).
+Script to parse bank statement files with known structure and produce a JSON object that conforms to [bank-schema](https://github.com/xpcoffee/bank-schema).
 
 ## Currently supported bank statement formats
 
 - [FNB](https://www.fnb.co.za)
+  - `DEFAULT` - this is for the CSV statements that gets sent to you every X months or that you download from the site.
+  - `TRANSACTION_HISTORY` - this is for the CSV statements downloaded from the transaction history page.
 - [StandardBank](https://www.standardbank.co.za/)
+  - `DEFAULT` - this is for the CSV statements that gets sent to you every X months or that you download from the site.
+  - `HANDMADE` - this is for the CSV statements are hand-crafter (e.g. for backfilling purposes).
+  
+If you need an additional format, please submit a pull-request or submit an issue.
 
 ## Dependencies
 
 - NodeJS 11 (necessary for [readline async iterator](https://nodejs.org/api/readline.html#readline_rl_symbol_asynciterator))
 
-## Installing
+## Installing the repo
 
 Clone the repo
 
@@ -23,10 +29,13 @@ git clone git@github.com:xpcoffee/parse-bank-statement.git \
 Install dependencies
 
 ```bash
-npm run install
+npm install
 ```
 
-Build the project and install the binary
+## CLI 
+### Installing the CLI
+
+After installing the repo, you can further install the CLI for use with other command-line tooling.
 
 ```bash
 npm run build \
@@ -36,23 +45,23 @@ npm run build \
 Try it out
 
 ```bash
-parse-bank-statement --help
+bank-schema-parser --help
 ```
 
-## Usage
+### Usage
 
 ```bash
-Usage: index --bank <bank> --file <file> [--handmade]
+Usage: bank-schema-parser --bank <bank> --filePath <filePath> [--type <type>]
 
 Options:
-  -V, --version      output the version number
-  -b, --bank <bank>  The bank who's statement will be parsed (default: false)
-  -f, --file <file>  The bank statement file to be parsed
-  -hm, --handmade    Use for statements with the 'handmade' format
-  -h, --help         output usage information
+  -V, --version              output the version number
+  -b, --bank <bank>          The bank who's statement will be parsed (default: false)
+  -f, --filePath <filePath>  The path to the file that should be parsed
+  -t, --type <type>          Use to specify the type of input file. Can be DEFAULT, TRANSACTION_HISTORY or HANDMADE. Uses DEFAULT if the option is unspecified.
+  -h, --help                 output usage information
 ```
 
-## Example
+### Example
 
 ```bash
 yarn run parse --bank fnb -statement-file ~/Downloads/my-fnb-bank-statement.csv
