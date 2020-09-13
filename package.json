@@ -23,11 +23,11 @@
     "typescript": "^3.9.7"
   },
   "scripts": {
-    "build": "npm run clean && mkdir dist && tsc && cp -R bin dist",
-    "parse": "node dist/bin/bank-schema-parser",
+    "build": "npm run clean && mkdir dist && tsc",
+    "parse": "node bin/bank-schema-parser",
     "clean": "rm -rf dist",
     "test": "jest",
     "postinstall": "tsc"
   },
-  "bin": "./dist/bin/bank-schema-parser"
+  "bin": "./bin/bank-schema-parser"
 }
