@@ -2,7 +2,8 @@
   "name": "parse-bank-statement",
   "version": "1.1.0",
   "description": "Parse a bank statement and output JSON",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "author": "Emerick Bosch <xpc.dev@gmail.com>",
   "license": "MIT",
   "dependencies": {
@@ -25,7 +26,8 @@
     "build": "npm run clean && mkdir dist && tsc",
     "parse": "node dist/cli.js",
     "clean": "rm -rf dist",
-    "test": "jest"
+    "test": "jest",
+    "postinstall": "tsc"
   },
   "bin": "./dist/cli.js"
 }
