@@ -22,9 +22,9 @@
   },
   "scripts": {
     "build": "npm run clean && mkdir -p build && tsc",
-    "parse": "node build/index.js",
+    "parse": "node build/cli.js",
     "clean": "rm -rf build",
     "test": "jest"
   },
-  "bin": "./build/index.js"
+  "bin": "./build/cli.js"
 }

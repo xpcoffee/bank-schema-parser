@@ -7,19 +7,12 @@ import {
   parseStandardbankStatement,
   parseHandmadeStandardbankStatement,
 } from "./statement-definitions";
-import { ParsingFunction, StatementParser } from "./types";
 import dedupe from "./deduplicate";
+import { Banks, InputFileTypes, Statement } from "./types";
 
-enum Banks {
-  FNB = "fnb",
-  StandardBank = "standardbank",
-}
-enum InputFileTypes {
-  Default = "DEFAULT",
-  Handmade = "HANDMADE",
-  TransactionHistory = "TRANSACTION_HISTORY",
-}
-
+/**
+ * Parses a file given into a 
+ */
 export function parse({
   bank,
   type = InputFileTypes.Default,
@@ -30,7 +23,7 @@ export function parse({
   type?: string;
   filePath: string;
   deduplicateTransactions?: boolean;
-}) {
+}): Promise<Statement> {
   const fn = getStatementParser(getParseFn({ bank, type }));
   const result = fn(filePath);
   return deduplicate ? result.then(dedupe) : result;
@@ -82,3 +75,13 @@ export const getParseFn = ({
 
   throw `Unknown bank ${bank}`;
 };
+
+
+export interface ParseParams {
+  bank: string;
+  file: string;
+  type: string;
+}
+
+export type StatementParser = (file: string) => Promise<Statement>;
+export type ParsingFunction = (line: string, memo: Statement) => Statement;

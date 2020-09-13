@@ -1,7 +1,6 @@
-import { ParsingFunction, Statement, Transaction } from "../types";
+import { Banks, Statement, Transaction, ParsingFunction } from "..";
 import hash from "../hash";
 import * as moment from "moment";
-import { STANDARD_BANK } from "./standardbankStatement";
 
 /**
  * Parses statements that are "handmade" i.e. that have been created from PDF statements.
@@ -14,7 +13,7 @@ const parseStandardBankBackfill: ParsingFunction = function (line: string, memo:
   switch (getSection(line)) {
     case Section.Account:
       statement.account = getAccount(line);
-      statement.bank = STANDARD_BANK;
+      statement.bank = Banks.StandardBank;
       break;
 
     case Section.Transaction:

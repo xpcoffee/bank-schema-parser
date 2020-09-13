@@ -1,8 +1,6 @@
-import { Statement, Transaction } from "../types";
+import { Banks, Statement, Transaction } from "..";
 import * as moment from "moment";
 import hash from "../hash";
-
-export const STANDARD_BANK = "StandardBank";
 
 /**
  * Parses a line from StandardBank statement.
@@ -18,7 +16,7 @@ export default function(line: string, memo: StandardBankStatement): StandardBank
     switch (sectionType(line)) {
       case Section.AccountNumber:
         statement.account = getAccountNumber(line);
-        statement.bank = STANDARD_BANK;
+        statement.bank = Banks.StandardBank;
         break;
       case Section.OpeningBalance:
         statement.runningBalance = getBalance(line);

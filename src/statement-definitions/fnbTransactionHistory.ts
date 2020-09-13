@@ -1,8 +1,6 @@
 import * as moment from "moment";
-import { Statement, Transaction } from "./types";
-import hash from "./hash";
-
-const FNB = "FNB";
+import { Statement, Transaction, Banks } from "..";
+import hash from "../hash";
 
 /**
  * Function with which to parse a line from a downloaded FNB statement.
@@ -19,7 +17,7 @@ export default function (line: string, memo: Statement): Statement {
       case StatementSection.Account:
         const [header, accountNumber, accountNickname] = line.split(",");
         statement.account = accountNumber;
-        statement.bank = FNB;
+        statement.bank = Banks.FNB;
         break;
 
       case StatementSection.Transaction:
@@ -34,12 +32,7 @@ export default function (line: string, memo: Statement): Statement {
 }
 
 function transactionFromFnbLineSections(line: string): Transaction {
-  const [
-    date,
-    amount,
-    balance,
-    description,
-  ] = line.split(",");
+  const [date, amount, balance, description] = line.split(",");
 
   return {
     description: description.trim(),
@@ -64,11 +57,10 @@ enum StatementSection {
   Account,
   Balance,
   Transaction,
-  Unknown
+  Unknown,
 }
 
 const getSection = (line: string) => {
-
   if (line.startsWith("Name")) {
     return StatementSection.Name;
   }

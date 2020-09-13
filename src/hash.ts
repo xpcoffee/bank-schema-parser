@@ -1,3 +1,6 @@
+/**
+ * Computes a hash value for a string
+ */
 export default (str: string): string => {
   let hash = 0;
   let chr;

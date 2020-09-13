@@ -1,12 +1,3 @@
-export interface Params {
-  bank: string;
-  file: string;
-  type: string;
-}
-
-export type StatementParser = (file: string) => Promise<Statement>;
-export type ParsingFunction = (line: string, memo: Statement) => Statement;
-
 export interface Statement {
   account: string;
   bank: string;
@@ -20,4 +11,15 @@ export interface Transaction {
   description: string;
   hash: string;
   balance: number;
+}
+
+export enum Banks {
+  FNB = "fnb",
+  StandardBank = "standardbank",
+}
+
+export enum InputFileTypes {
+  Default = "DEFAULT",
+  Handmade = "HANDMADE",
+  TransactionHistory = "TRANSACTION_HISTORY",
 }

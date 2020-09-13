@@ -1,8 +1,6 @@
 import * as moment from "moment";
-import { Statement, Transaction } from "../types";
+import { Banks, Statement, Transaction } from "..";
 import hash from "../hash";
-
-const FNB = "FNB";
 
 /**
  * Function with which to parse a line from an FNB statement.
@@ -19,7 +17,7 @@ export default function (line: string, memo: FnbStatement): FnbStatement {
       case StatementSection.AccountDetails:
         const [accSection, accountNumber, name, type] = line.split(",");
         statement.account = accountNumber;
-        statement.bank = FNB;
+        statement.bank = Banks.FNB;
         break;
 
       case StatementSection.StatementInfo:
