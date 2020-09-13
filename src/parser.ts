@@ -1,5 +1,4 @@
 import * as fs from "fs";
-import * as readline from "readline";
 import { getEmptyStatement } from "./statement";
 import {
   parseFnbStatement,
@@ -69,7 +68,7 @@ export function getStatementParser(
  * Reads a file and yields each line of the file
  */
 export async function* getStatementLinesFromFile(filePath: string) {
-  const rl = readline.createInterface({
+  const rl = require("readline").createInterface({
     input: fs.createReadStream(filePath),
     crlfDelay: Infinity,
   });
