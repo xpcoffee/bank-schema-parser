@@ -68,7 +68,7 @@ export function getStatementParser(
  * Reads a file and yields each line of the file
  */
 export async function* getStatementLinesFromFile(filePath: string) {
-  const rl = getReadline(filePath);
+  const rl = await getReadline(filePath);
 
   for await (const line of rl) {
     yield line;
@@ -79,14 +79,15 @@ export async function* getStatementLinesFromFile(filePath: string) {
  * Factory function for readline; returns an empty array if running
  * in a browser environment (readline only exists in a node process)
  */
-function getReadline(filePath: string) {
-  if(typeof window === "undefined"){
-    return []
-  } else {
-    return require("readline").createInterface({
+async function getReadline(filePath: string) {
+  try {
+    const readline = await import("readline");
+    return readline.createInterface({
       input: fs.createReadStream(filePath),
       crlfDelay: Infinity,
     });
+  } catch(e) {
+    return [];
   }
 }
 
