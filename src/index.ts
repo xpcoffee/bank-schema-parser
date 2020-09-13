@@ -3,10 +3,8 @@
 
 import * as program from "commander";
 
-import { parseFnbStatement, parseFnbTransactionHistory, parseHandmadeStandardbankStatement, parseStandardbankStatement } from "./statement-definitions";
-import { Params, ParsingFunction } from "./types";
-import { getStatementParser } from "./statement";
-import deduplicateTransactions from "./deduplicate";
+import { Params } from "./types";
+import { parse } from "./parser";
 
 // Parse command-line input
 program
@@ -30,42 +28,12 @@ if (!program.file) {
   process.exit(1);
 }
 
-enum Banks {
-  FNB = "fnb",
-  StandardBank = "standardbank",
-}
-enum InputFileTypes {
-  Default = "DEFAULT",
-  Handmade = "HANDMADE",
-  TransactionHistory = "TRANSACTION_HISTORY",
-}
 const params = (program as any) as Params;
 
-/**
- * Factory function for getting a parsing function
- */
-const getParseFn = ({ bank, type = InputFileTypes.Default }: { bank: string; type?: string }): ParsingFunction => {
-  if (bank === Banks.FNB && type === InputFileTypes.Default) {
-    return parseFnbStatement;
-  }
-  if (bank === Banks.FNB && type === InputFileTypes.TransactionHistory) {
-    return parseFnbTransactionHistory;
-  }
-  if (bank === Banks.StandardBank && type === InputFileTypes.Default) {
-    return parseStandardbankStatement;
-  }
-  if (bank === Banks.StandardBank && type === InputFileTypes.Handmade) {
-    return parseHandmadeStandardbankStatement;
-  }
-
-  throw `Unknown bank ${bank}`;
-};
-
 try {
-  const parse = getStatementParser(getParseFn({ bank: params.bank, type: params.type }));
   const printJson = (s: {}) => console.log("%j", s);
 
-  parse(params.file).then(deduplicateTransactions).then(printJson).catch(console.error);
+  parse({ bank: params.bank, type: params.type, filePath: params.file }).then(printJson).catch(console.error);
 } catch (e) {
   console.error(`[ERROR] ${e}`);
 }
