@@ -1,6 +1,6 @@
 # parse-bank-statement
 
-Script to parse a bank statement and produce a JSON object
+Script to parse a bank statement and produce a JSON object that conforms to [bank-schema](https://github.com/xpcoffee/bank-schema).
 
 ## Dependencies
 
