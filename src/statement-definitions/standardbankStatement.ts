@@ -1,6 +1,6 @@
-import { Statement, Transaction } from "./types";
+import { Statement, Transaction } from "../types";
 import * as moment from "moment";
-import hash from "./hash";
+import hash from "../hash";
 
 export const STANDARD_BANK = "StandardBank";
 

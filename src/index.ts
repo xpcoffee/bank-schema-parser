@@ -3,10 +3,7 @@
 
 import * as program from "commander";
 
-import parseFnbStatement from "../src/fnbStatement";
-import parseFnbTransactionHistory from "../src/fnbTransactionHistory";
-import parseStandardbankStatement from "../src/standardbankStatement";
-import parseHandmadeStandardbankStatement from "./standardbankHandmadeStatement";
+import { parseFnbStatement, parseFnbTransactionHistory, parseHandmadeStandardbankStatement, parseStandardbankStatement } from "./statement-definitions";
 import { Params, ParsingFunction } from "./types";
 import { getStatementParser } from "./statement";
 import deduplicateTransactions from "./deduplicate";

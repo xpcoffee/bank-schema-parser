@@ -1,5 +1,5 @@
-import { ParsingFunction, Statement, Transaction } from "./types";
-import hash from "./hash";
+import { ParsingFunction, Statement, Transaction } from "../types";
+import hash from "../hash";
 import * as moment from "moment";
 import { STANDARD_BANK } from "./standardbankStatement";
 

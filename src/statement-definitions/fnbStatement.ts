@@ -1,6 +1,6 @@
 import * as moment from "moment";
-import { Statement, Transaction } from "./types";
-import hash from "./hash";
+import { Statement, Transaction } from "../types";
+import hash from "../hash";
 
 const FNB = "FNB";
 
