@@ -8,6 +8,7 @@ import { ParseFileParams, parseFromFile, ParseParams } from "./parser";
 // Parse command-line input
 program
   .version("1.0.0")
+  .name("bank-schema-parser")
   .usage("--bank <bank> --filePath <filePath> [--type <type>]")
   .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
   .option("-f, --filePath <filePath>", "The path to the file that should be parsed")
@@ -16,6 +17,10 @@ program
     "Use to specify the type of input file. Can be DEFAULT, TRANSACTION_HISTORY or HANDMADE. Uses DEFAULT if the option is unspecified.",
   )
   .parse(process.argv);
+
+if (!program.bank && !program.filePath) {
+  program.help();
+}
 
 if (!program.bank) {
   console.error("Invalid bank name. Type --help for more details.");
@@ -32,7 +37,9 @@ const params = (program as any) as CliParams;
 try {
   const printJson = (s: {}) => console.log("%j", s);
 
-  parseFromFile({ bank: params.bank, type: params.type, filePath: params.filePath }).then(printJson).catch(console.error);
+  parseFromFile({ bank: params.bank, type: params.type, filePath: params.filePath })
+    .then(printJson)
+    .catch(console.error);
 } catch (e) {
   console.error(`[ERROR] ${e}`);
 }
