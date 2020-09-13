@@ -27,7 +27,7 @@
     "parse": "node dist/cli.js",
     "clean": "rm -rf dist",
     "test": "jest",
-    "postinstall": "tsc"
+    "prepack": "npm run build"
   },
   "bin": "./dist/cli.js"
 }
