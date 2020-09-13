@@ -2,6 +2,11 @@
 
 Script to parse a bank statement and produce a JSON object that conforms to [bank-schema](https://github.com/xpcoffee/bank-schema).
 
+## Currently supported bank statement formats
+
+- [FNB](https://www.fnb.co.za)
+- [StandardBank](https://www.standardbank.co.za/)
+
 ## Dependencies
 
 - NodeJS 11 (necessary for [readline async iterator](https://nodejs.org/api/readline.html#readline_rl_symbol_asynciterator))
@@ -70,9 +75,7 @@ The output of the command has the following structure:
       "balance": 11520
     }
   ],
-  "parsingErrors": [
-    "some problem was encountered when doing X"
-  ]
+  "parsingErrors": ["some problem was encountered when doing X"]
 }
 ```
 

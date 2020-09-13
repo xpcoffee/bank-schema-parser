@@ -18,7 +18,7 @@
     "jest": "^24.5.0",
     "ts-jest": "^24.0.0",
     "typescript": "^3.3.3333",
-    "bank-schema": "1.0.0"
+    "bank-schema": "git://github.com/xpcoffee/bank-schema#master"
   },
   "scripts": {
     "build": "npm run clean && mkdir -p build && tsc",
