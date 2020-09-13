@@ -10,24 +10,6 @@ import dedupe from "./deduplicate";
 import { Banks, InputFileTypes, Statement } from "./types";
 
 /**
- * Parses a file given into a statement
- */
-export function parseFromFile({
-  bank,
-  type = InputFileTypes.Default,
-  filePath,
-  deduplicateTransactions,
-}: ParseFileParams): Promise<Statement> {
-  const lines = getStatementLinesFromFile(filePath);
-  const fn = getStatementParser(getParseFn({ bank, type }), lines);
-  const result = fn(filePath);
-  return deduplicateTransactions ? result.then(dedupe) : result;
-}
-export interface ParseFileParams extends ParseParams {
-  filePath: string;
-}
-
-/**
  * Parses a file string into a statement
  */
 export function parseFromString({
@@ -62,33 +44,6 @@ export function getStatementParser(
     }
     return memo;
   };
-}
-
-/**
- * Reads a file and yields each line of the file
- */
-export async function* getStatementLinesFromFile(filePath: string) {
-  const rl = await getReadline(filePath);
-
-  for await (const line of rl) {
-    yield line;
-  }
-}
-
-/**
- * Factory function for readline; returns an empty array if running
- * in a browser environment (readline only exists in a node process)
- */
-async function getReadline(filePath: string) {
-  try {
-    const readline = await import("readline");
-    return readline.createInterface({
-      input: fs.createReadStream(filePath),
-      crlfDelay: Infinity,
-    });
-  } catch(e) {
-    return [];
-  }
 }
 
 /**

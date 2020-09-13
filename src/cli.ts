@@ -3,7 +3,7 @@
 
 import * as program from "commander";
 
-import { ParseFileParams, parseFromFile } from "./parser";
+import { ParseFileParams, parseFromFile } from "./node-parser";
 
 export function run(proc: NodeJS.Process) {
   // Parse command-line input
