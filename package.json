@@ -18,7 +18,7 @@
     "babel-jest": "^24.9.0",
     "bank-schema": "git://github.com/xpcoffee/bank-schema#master",
     "jest": "^24.9.0",
-    "ts-jest": "^24.3.0",
+    "ts-jest": "^26.3.0",
     "typescript": "^3.9.7"
   },
   "scripts": {
