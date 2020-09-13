@@ -11,20 +11,21 @@
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.3.3",
-    "@types/jest": "^24.0.11",
+    "@types/jest": "^24.9.1",
     "@types/node": "^11.9.5",
-    "babel-jest": "^24.5.0",
-    "jest": "^24.5.0",
-    "ts-jest": "^24.0.0",
-    "typescript": "^3.3.3333",
-    "bank-schema": "git://github.com/xpcoffee/bank-schema#master"
+    "babel-jest": "^24.9.0",
+    "bank-schema": "git://github.com/xpcoffee/bank-schema#master",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.3.0",
+    "typescript": "^3.9.7"
   },
   "scripts": {
-    "build": "npm run clean && mkdir -p build && tsc",
-    "parse": "node build/cli.js",
-    "clean": "rm -rf build",
+    "build": "npm run clean && mkdir dist && tsc",
+    "parse": "node dist/cli.js",
+    "clean": "rm -rf dist",
     "test": "jest"
   },
-  "bin": "./build/cli.js"
+  "bin": "./dist/cli.js"
 }

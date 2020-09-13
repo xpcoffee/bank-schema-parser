@@ -1,6 +1,6 @@
 import { validateTransaction } from "bank-schema";
 import { getEmptyStatement } from "../src/statement";
-import standardbank, { StandardBankStatement } from "../src/standardbankStatement";
+import standardbank, { StandardBankStatement } from "../src/statement-definitions/standardbankStatement";
 
 describe("standardbank", () => {
   it("parses a transaction from a statement", () => {

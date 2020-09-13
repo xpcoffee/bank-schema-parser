@@ -1,5 +1,5 @@
 import { validateTransaction } from "bank-schema";
-import parsingFunction from "../src/standardbankHandmadeStatement";
+import parsingFunction from "../src/statement-definitions/standardbankHandmadeStatement";
 import { getEmptyStatement } from "../src/statement";
 
 describe("standardBankBackfill", () => {
