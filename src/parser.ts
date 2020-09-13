@@ -11,22 +11,39 @@ import dedupe from "./deduplicate";
 import { Banks, InputFileTypes, Statement } from "./types";
 
 /**
- * Parses a file given into a 
+ * Parses a file given into a statement
  */
-export function parse({
+export function parseFromFile({
   bank,
   type = InputFileTypes.Default,
   filePath,
-  deduplicateTransactions: deduplicate,
-}: {
-  bank: string;
-  type?: string;
-  filePath: string;
-  deduplicateTransactions?: boolean;
-}): Promise<Statement> {
-  const fn = getStatementParser(getParseFn({ bank, type }));
+  deduplicateTransactions,
+}: ParseFileParams): Promise<Statement> {
+  const lines = getStatementLinesFromFile(filePath);
+  const fn = getStatementParser(getParseFn({ bank, type }), lines);
   const result = fn(filePath);
-  return deduplicate ? result.then(dedupe) : result;
+  return deduplicateTransactions ? result.then(dedupe) : result;
+}
+export interface ParseFileParams extends ParseParams {
+  filePath: string;
+}
+
+/**
+ * Parses a file string into a statement
+ */
+export function parseFromString({
+  bank,
+  type = InputFileTypes.Default,
+  inputString,
+  deduplicateTransactions,
+}: ParseStringParams): Promise<Statement> {
+  const lines = getStatementLinesFromString(inputString);
+  const fn = getStatementParser(getParseFn({ bank, type }), lines);
+  const result = fn(inputString);
+  return deduplicateTransactions ? result.then(dedupe) : result;
+}
+export interface ParseStringParams extends ParseParams {
+  inputString: string;
 }
 
 /**
@@ -35,19 +52,41 @@ export function parse({
  * @param parsingFunction The function to use to parse each line of the file.
  * @returns a function that, given a path to a file, will parse the file into a Statement object.
  */
-export function getStatementParser(parsingFunction: ParsingFunction): StatementParser {
-  return async function parseStatement(filePath: string) {
-    const rl = readline.createInterface({
-      input: fs.createReadStream(filePath),
-      crlfDelay: Infinity,
-    });
-
+export function getStatementParser(
+  parsingFunction: ParsingFunction,
+  statementLines: AsyncGenerator<string>,
+): StatementParser {
+  return async function parseStatement() {
     let memo = getEmptyStatement();
-    for await (const line of rl) {
+    for await (const line of statementLines) {
       memo = parsingFunction(line, memo);
     }
     return memo;
   };
+}
+
+/**
+ * Reads a file and yields each line of the file
+ */
+export async function* getStatementLinesFromFile(filePath: string) {
+  const rl = readline.createInterface({
+    input: fs.createReadStream(filePath),
+    crlfDelay: Infinity,
+  });
+
+  for await (const line of rl) {
+    yield line;
+  }
+}
+
+/**
+ * Yields each line of a string
+ */
+export async function* getStatementLinesFromString(statement: string) {
+  const lines = statement.split("\n");
+  for await (const line of lines) {
+    yield line;
+  }
 }
 
 /**
@@ -76,11 +115,10 @@ export const getParseFn = ({
   throw `Unknown bank ${bank}`;
 };
 
-
 export interface ParseParams {
   bank: string;
-  file: string;
   type: string;
+  deduplicateTransactions?: boolean;
 }
 
 export type StatementParser = (file: string) => Promise<Statement>;
