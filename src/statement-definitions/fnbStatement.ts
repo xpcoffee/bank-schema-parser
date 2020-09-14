@@ -74,8 +74,8 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
     accruedCharges,
   ] = line.split(",");
 
-  const cleanDescription = description.replace(/"/g, "");
-  const nonEmptyDescription = cleanDescription.length ? cleanDescription : type.replace(/"/g, "");
+  const cleanDescription = (description || "").replace(/"/g, "");
+  const nonEmptyDescription = cleanDescription.length ? cleanDescription : (type || "").replace(/"/g, "");
 
   return {
     description: nonEmptyDescription,
