@@ -1,25 +1,19 @@
 import * as fs from "fs";
 import { getEmptyStatement } from "./statement";
-import {
-  parseFnbStatement,
-  parseFnbTransactionHistory,
-  parseStandardbankStatement,
-  parseHandmadeStandardbankStatement,
-} from "./statement-definitions";
+import statementDefinitions, { FileType } from "./statement-definitions";
 import dedupe from "./deduplicate";
-import { Banks, InputFileTypes, Statement } from "./types";
+import { Statement } from "./types";
 
 /**
  * Parses a file string into a statement
  */
 export function parseFromString({
-  bank,
-  type = InputFileTypes.Default,
+  fileType,
   inputString,
   deduplicateTransactions,
 }: ParseStringParams): Promise<Statement> {
   const lines = getStatementLinesFromString(inputString);
-  const fn = getStatementParser(getParseFn({ bank, type }), lines);
+  const fn = getStatementParser(getParseFn(fileType), lines);
   const result = fn(inputString);
   return deduplicateTransactions ? result.then(dedupe) : result;
 }
@@ -59,32 +53,17 @@ export async function* getStatementLinesFromString(statement: string) {
 /**
  * Factory function for getting a parsing function
  */
-export const getParseFn = ({
-  bank,
-  type = InputFileTypes.Default,
-}: {
-  bank: string;
-  type?: string;
-}): ParsingFunction => {
-  if (bank === Banks.FNB && type === InputFileTypes.Default) {
-    return parseFnbStatement;
-  }
-  if (bank === Banks.FNB && type === InputFileTypes.TransactionHistory) {
-    return parseFnbTransactionHistory;
-  }
-  if (bank === Banks.StandardBank && type === InputFileTypes.Default) {
-    return parseStandardbankStatement;
-  }
-  if (bank === Banks.StandardBank && type === InputFileTypes.Handmade) {
-    return parseHandmadeStandardbankStatement;
+export const getParseFn = (fileType: FileType): ParsingFunction => {
+  const fn = statementDefinitions[fileType];
+  if (fn) {
+    return fn;
   }
 
-  throw `Unknown bank ${bank}`;
+  throw `Unknown file type ${fileType}`;
 };
 
 export interface ParseParams {
-  bank: string;
-  type: string;
+  fileType: FileType;
   deduplicateTransactions?: boolean;
 }
 

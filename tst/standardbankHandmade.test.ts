@@ -1,18 +1,18 @@
 import { validateTransaction } from "bank-schema";
-import parsingFunction from "../src/statement-definitions/standardbankHandmadeStatement";
+import standardBank from "../src/statement-definitions/standardbankHandmade";
 import { getEmptyStatement } from "../src/statement";
 
 describe("standardBankBackfill", () => {
   it("extracts the account name", () => {
     const line = "ACCOUNT,10092563862,,,";
 
-    const statement = parsingFunction(line, getEmptyStatement());
+    const statement = standardBank.parse(line, getEmptyStatement());
     expect(statement.account).toEqual("10092563862");
   });
 
   it("parses the transactions", () => {
     const line = "HIST,MAGTAPE CREDIT TEST TRANSFER,500.00,2017-07-26,130500.00";
-    const transaction = parsingFunction(line, getEmptyStatement()).transactions[0];
+    const transaction = standardBank.parse(line, getEmptyStatement()).transactions[0];
 
     expect(validateTransaction(transaction).valid).toBeTruthy();
     expect(transaction.amountInZAR).toEqual(500);

@@ -9,7 +9,7 @@ import hash from "../hash";
  * @param memo - the statement with which the parsed data should be combined
  * @returns statement - the statement with more data parsed in
  */
-export default function(line: string, memo: StandardBankStatement): StandardBankStatement {
+function parse(line: string, memo: StandardBankStatement): StandardBankStatement {
   const statement = Object.assign({}, memo);
 
   try {
@@ -112,3 +112,8 @@ const toTimeStamp = (dateString: string) => moment(dateString).format();
 
 const toDateString = (standardBankDateString: string): string =>
   [standardBankDateString.slice(0, 4), standardBankDateString.slice(4, 6), standardBankDateString.slice(6)].join("-");
+
+export default {
+  fileType: "StandardBank-Default",
+  parse,
+} as const;

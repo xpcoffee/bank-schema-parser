@@ -17,9 +17,3 @@ export enum Banks {
   FNB = "fnb",
   StandardBank = "standardbank",
 }
-
-export enum InputFileTypes {
-  Default = "DEFAULT",
-  Handmade = "HANDMADE",
-  TransactionHistory = "TRANSACTION_HISTORY",
-}

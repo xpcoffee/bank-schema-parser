@@ -69,4 +69,7 @@ function toTimestamp(dateString: string): string {
   return moment(dateString).format();
 }
 
-export default parseStandardBankBackfill;
+export default {
+  fileType: "StandardBank-Handmade",
+  parse: parseStandardBankBackfill,
+} as const;

@@ -4,32 +4,29 @@
 import * as program from "commander";
 
 import { ParseFileParams, parseFromFile } from "./node-parser";
+import { fileTypes } from "./statement-definitions";
 
 export function run(proc: NodeJS.Process) {
   // Parse command-line input
   program
     .version("1.0.0")
     .name("bank-schema-parser")
-    .usage("--bank <bank> --filePath <filePath> [--type <type>]")
-    .option("-b, --bank <bank>", "The bank who's statement will be parsed", /^(fnb|standardbank)$/i, false)
+    .usage("--fileType <fileType> --filePath <filePath>")
+    .option("-t, --fileType <fileType>", "The type of input file. Valid file types are: " + fileTypes.join(" "))
     .option("-f, --filePath <filePath>", "The path to the file that should be parsed")
-    .option(
-      "-t, --type <type>",
-      "Use to specify the type of input file. Can be DEFAULT, TRANSACTION_HISTORY or HANDMADE. Uses DEFAULT if the option is unspecified.",
-    )
     .parse(proc.argv);
 
-  if (!program.bank && !program.filePath) {
+  if (!program.fileType && !program.filePath) {
     program.help();
   }
 
-  if (!program.bank) {
-    console.error("Invalid bank name. Type --help for more details.");
+  if (!program.fileType) {
+    console.error("You must specify a file type. Type --help for more details.");
     proc.exit(1);
   }
 
   if (!program.filePath) {
-    console.error("Invalid bank statement file. Type --help for more details.");
+    console.error("You must specify a file path. Type --help for more details.");
     proc.exit(1);
   }
 
@@ -38,9 +35,7 @@ export function run(proc: NodeJS.Process) {
   try {
     const printJson = (s: {}) => console.log("%j", s);
 
-    parseFromFile({ bank: params.bank, type: params.type, filePath: params.filePath })
-      .then(printJson)
-      .catch(console.error);
+    parseFromFile({ fileType: params.fileType, filePath: params.filePath }).then(printJson).catch(console.error);
   } catch (e) {
     console.error(`[ERROR] ${e}`);
   }
