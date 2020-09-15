@@ -1,4 +1,3 @@
-import * as fs from "fs";
 import { getEmptyStatement } from "./statement";
 import statementDefinitions, { FileType } from "./statement-definitions";
 import dedupe from "./deduplicate";

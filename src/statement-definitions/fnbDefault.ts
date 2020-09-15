@@ -140,6 +140,6 @@ const getSection = (line: string) => {
 };
 
 export default {
-  fileType: "FNB-Default",
+  fileType: "FNB-Default" as const,
   parse,
-} as const;
+};

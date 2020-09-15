@@ -80,7 +80,8 @@ const getSection = (line: string) => {
   return StatementSection.Unknown;
 };
 
+const fileType = "FNB-TransactionHistory" as const;
 export default {
-  fileType: "FNB-TransactionHistory",
+  fileType,
   parse,
-} as const;
+};

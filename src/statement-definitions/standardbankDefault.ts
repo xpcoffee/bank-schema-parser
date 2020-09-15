@@ -114,6 +114,6 @@ const toDateString = (standardBankDateString: string): string =>
   [standardBankDateString.slice(0, 4), standardBankDateString.slice(4, 6), standardBankDateString.slice(6)].join("-");
 
 export default {
-  fileType: "StandardBank-Default",
+  fileType: "StandardBank-Default" as const,
   parse,
-} as const;
+};
