@@ -16,7 +16,7 @@ export default function (line: string, memo: Statement): Statement {
     switch (getSection(line)) {
       case StatementSection.Account:
         const [header, accountNumber, accountNickname] = line.split(",");
-        statement.account = accountNumber;
+        statement.account = accountNumber.trim();
         statement.bank = Banks.FNB;
         break;
 
