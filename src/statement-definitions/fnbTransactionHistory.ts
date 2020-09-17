@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import { Statement, Transaction, Banks } from "..";
+import { Statement, Transaction, Banks } from "../types";
 import hash from "../hash";
 
 /**
@@ -9,7 +9,7 @@ import hash from "../hash";
  * @param memo - the statement with which the parsed data should be combined
  * @returns statement - the statement with more data parsed in
  */
-export default function (line: string, memo: Statement): Statement {
+function parse(line: string, memo: Statement): Statement {
   const statement = Object.assign({}, memo);
 
   try {
@@ -78,4 +78,10 @@ const getSection = (line: string) => {
   }
 
   return StatementSection.Unknown;
+};
+
+const fileType = "FNB-TransactionHistory" as const;
+export default {
+  fileType,
+  parse,
 };

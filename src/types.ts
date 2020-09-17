@@ -18,8 +18,5 @@ export enum Banks {
   StandardBank = "standardbank",
 }
 
-export enum InputFileTypes {
-  Default = "DEFAULT",
-  Handmade = "HANDMADE",
-  TransactionHistory = "TRANSACTION_HISTORY",
-}
+export type StatementParser = (file: string) => Promise<Statement>;
+export type ParsingFunction = (line: string, memo: Statement) => Statement;

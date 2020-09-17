@@ -1,6 +1,6 @@
 import * as readline from "readline";
 import * as fs from "fs";
-import { InputFileTypes, Statement, getStatementParser, getParseFn, ParseParams } from ".";
+import { Statement, getStatementParser, getParseFn, ParseParams } from ".";
 import dedupe from "./deduplicate";
 
 // This file is split off from the main parser file to avoid import issues when pulling
@@ -9,14 +9,9 @@ import dedupe from "./deduplicate";
 /**
  * Parses a file given into a statement
  */
-export function parseFromFile({
-  bank,
-  type = InputFileTypes.Default,
-  filePath,
-  deduplicateTransactions,
-}: ParseFileParams): Promise<Statement> {
+export function parseFromFile({ fileType, filePath, deduplicateTransactions }: ParseFileParams): Promise<Statement> {
   const lines = getStatementLinesFromFile(filePath);
-  const fn = getStatementParser(getParseFn({ bank, type }), lines);
+  const fn = getStatementParser(getParseFn(fileType), lines);
   const result = fn(filePath);
   return deduplicateTransactions ? result.then(dedupe) : result;
 }

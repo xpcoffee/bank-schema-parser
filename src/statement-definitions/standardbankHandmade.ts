@@ -1,4 +1,4 @@
-import { Banks, Statement, Transaction, ParsingFunction } from "..";
+import { Banks, ParsingFunction, Statement, Transaction } from "../types";
 import hash from "../hash";
 import * as moment from "moment";
 
@@ -7,7 +7,7 @@ import * as moment from "moment";
  * PDF statements have fewer overall fields, but more transaction information that regular statements
  * (notably the transactions contain balances), so a different function is required to parse them.
  */
-const parseStandardBankBackfill: ParsingFunction = function (line: string, memo: Statement): Statement {
+const parse: ParsingFunction = function (line: string, memo: Statement): Statement {
   const statement = Object.assign({}, memo);
 
   switch (getSection(line)) {
@@ -69,4 +69,7 @@ function toTimestamp(dateString: string): string {
   return moment(dateString).format();
 }
 
-export default parseStandardBankBackfill;
+export default {
+  fileType: "StandardBank-Handmade" as const,
+  parse,
+};

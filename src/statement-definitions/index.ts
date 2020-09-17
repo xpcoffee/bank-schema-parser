@@ -1,6 +1,16 @@
-import parseFnbStatement from "./fnbStatement";
-import parseFnbTransactionHistory from "./fnbTransactionHistory";
-import parseStandardbankStatement from "./standardbankStatement";
-import parseHandmadeStandardbankStatement from "./standardbankHandmadeStatement";
+import fnbDefault from "./fnbDefault";
+import fnbTransactionHistory from "./fnbTransactionHistory";
+import standardbankDefault from "./standardbankDefault";
+import standardbankHandmade from "./standardbankHandmade";
 
-export { parseFnbStatement, parseFnbTransactionHistory, parseStandardbankStatement, parseHandmadeStandardbankStatement };
+const statementDefinitions = {
+  [fnbDefault.fileType]: fnbDefault.parse,
+  [fnbTransactionHistory.fileType]: fnbTransactionHistory.parse,
+  [standardbankDefault.fileType]: standardbankDefault.parse,
+  [standardbankHandmade.fileType]: standardbankHandmade.parse,
+};
+
+export const fileTypes = Object.keys(statementDefinitions);
+export type FileType = keyof typeof statementDefinitions;
+
+export default statementDefinitions;
