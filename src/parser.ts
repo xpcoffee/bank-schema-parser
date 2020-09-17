@@ -1,7 +1,7 @@
 import { getEmptyStatement } from "./statement";
 import statementDefinitions, { FileType } from "./statement-definitions";
 import dedupe from "./deduplicate";
-import { Statement } from "./types";
+import { ParsingFunction, Statement, StatementParser } from "./types";
 
 /**
  * Parses a file string into a statement
@@ -65,6 +65,3 @@ export interface ParseParams {
   fileType: FileType;
   deduplicateTransactions?: boolean;
 }
-
-export type StatementParser = (file: string) => Promise<Statement>;
-export type ParsingFunction = (line: string, memo: Statement) => Statement;

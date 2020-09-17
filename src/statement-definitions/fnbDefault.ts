@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import { Banks, Statement, Transaction } from "..";
+import { Banks, Statement, Transaction } from "../types";
 import hash from "../hash";
 
 /**

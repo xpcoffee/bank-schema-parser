@@ -17,3 +17,6 @@ export enum Banks {
   FNB = "fnb",
   StandardBank = "standardbank",
 }
+
+export type StatementParser = (file: string) => Promise<Statement>;
+export type ParsingFunction = (line: string, memo: Statement) => Statement;
