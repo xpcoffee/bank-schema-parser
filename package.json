@@ -1,5 +1,5 @@
 {
-  "name": "bank-schema-parser",
+  "name": "@xpcoffee/bank-schema-parser",
   "scope": "@xpcoffee",
   "version": "1.0.0",
   "description": "Functionality for parsing files into JSON which conforms to bank-schema",
