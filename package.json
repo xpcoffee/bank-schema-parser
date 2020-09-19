@@ -1,14 +1,15 @@
 {
   "name": "bank-schema-parser",
+  "scope": "@xpcoffee",
   "version": "1.0.0",
   "description": "Functionality for parsing files into JSON which conforms to bank-schema",
   "scripts": {
-    "build": "webpack",
+    "build": "npm run clean && webpack",
     "watch": "webpack --watch",
     "parse": "node bin/bank-schema-parser",
     "clean": "rm -rf dist",
     "test": "jest",
-    "prepack": "npm run build"
+    "prepublish": "npm run build"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
