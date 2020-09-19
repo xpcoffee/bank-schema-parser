@@ -8,7 +8,7 @@
     "watch": "webpack --watch",
     "parse": "node bin/bank-schema-parser",
     "clean": "rm -rf dist",
-    "test": "jest",
+    "test": "jest --coverage",
     "prepublish": "npm run build"
   },
   "main": "dist/index.js",
