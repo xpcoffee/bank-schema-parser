@@ -1,7 +1,7 @@
 {
   "name": "@xpcoffee/bank-schema-parser",
   "scope": "@xpcoffee",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Functionality for parsing files into JSON which conforms to bank-schema",
   "scripts": {
     "build": "npm run clean && webpack",
@@ -25,7 +25,7 @@
   "dependencies": {
     "commander": "^2.19.0",
     "moment": "^2.24.0",
-    "bank-schema": "git://github.com/xpcoffee/bank-schema#master"
+    "@xpcoffee/bank-schema": "^1.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",

@@ -1,4 +1,4 @@
-import { validateTransaction } from "bank-schema";
+import { validateTransaction } from "@xpcoffee/bank-schema";
 import { getEmptyStatement } from "../src/statement";
 import definition, { FnbStatement } from "../src/statement-definitions/fnbDefault";
 
