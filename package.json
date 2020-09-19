@@ -33,6 +33,5 @@
     "clean": "rm -rf dist",
     "test": "jest",
     "postinstall": "webpack"
-  },
-  "bin": "./bin/bank-schema-parser"
+  }
 }
