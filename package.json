@@ -8,7 +8,8 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.19.0",
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "bank-schema": "git://github.com/xpcoffee/bank-schema#master"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
@@ -17,7 +18,6 @@
     "@types/jest": "^24.9.1",
     "@types/node": "^11.9.5",
     "babel-jest": "^24.9.0",
-    "bank-schema": "git://github.com/xpcoffee/bank-schema#master",
     "jest": "^24.9.0",
     "terser-webpack-plugin": "^4.2.1",
     "ts-jest": "^26.3.0",
