@@ -19,15 +19,20 @@
     "babel-jest": "^24.9.0",
     "bank-schema": "git://github.com/xpcoffee/bank-schema#master",
     "jest": "^24.9.0",
+    "terser-webpack-plugin": "^4.2.1",
     "ts-jest": "^26.3.0",
-    "typescript": "^3.9.7"
+    "ts-loader": "^8.0.4",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12"
   },
   "scripts": {
-    "build": "npm run clean && mkdir dist && tsc",
+    "build": "webpack",
+    "watch": "webpack --watch",
     "parse": "node bin/bank-schema-parser",
     "clean": "rm -rf dist",
     "test": "jest",
-    "postinstall": "tsc"
+    "postinstall": "webpack"
   },
   "bin": "./bin/bank-schema-parser"
 }
