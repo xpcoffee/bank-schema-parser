@@ -15,11 +15,11 @@ type Dict<T> = { [key: string]: T };
  *    should result in the same set of deduplicated transactions. This is important for safely working with
  *    different types of statement (monthly statements, yearly statements, etc).
  */
-export default (untreatedStatement: Statement): Statement => {
+export const deduplicateTransactions = (untreatedStatement: Statement): Statement => {
   const statement = Object.assign({}, untreatedStatement);
   const dict: Dict<Transaction> = {};
 
-  statement.transactions.forEach(transaction => {
+  statement.transactions.forEach((transaction) => {
     const hash = transaction.hash.toString();
     if (dict[hash]) {
       let newHash = `${hash}D`;

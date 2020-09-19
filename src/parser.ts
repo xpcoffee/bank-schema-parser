@@ -1,6 +1,6 @@
 import { getEmptyStatement } from "./statement";
 import statementDefinitions, { FileType } from "./statement-definitions";
-import dedupe from "./deduplicate";
+import { deduplicateTransactions as deduplicateFn } from "./deduplicate";
 import { ParsingFunction, Statement, StatementParser } from "./types";
 
 /**
@@ -14,7 +14,7 @@ export function parseFromString({
   const lines = getStatementLinesFromString(inputString);
   const fn = getStatementParser(getParseFn(fileType), lines);
   const result = fn(inputString);
-  return deduplicateTransactions ? result.then(dedupe) : result;
+  return deduplicateTransactions ? result.then(deduplicateFn) : result;
 }
 export interface ParseStringParams extends ParseParams {
   inputString: string;
