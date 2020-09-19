@@ -1,7 +1,7 @@
 {
-  "name": "parse-bank-statement",
-  "version": "1.1.0",
-  "description": "Parse a bank statement and output JSON",
+  "name": "bank-schema-parser",
+  "version": "1.0.0",
+  "description": "Functionality for parsing files into JSON which conforms to bank-schema",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Emerick Bosch <xpc.dev@gmail.com>",
