@@ -2,6 +2,14 @@
   "name": "bank-schema-parser",
   "version": "1.0.0",
   "description": "Functionality for parsing files into JSON which conforms to bank-schema",
+  "scripts": {
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "parse": "node bin/bank-schema-parser",
+    "clean": "rm -rf dist",
+    "test": "jest",
+    "prepack": "npm run build"
+  },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "author": "Emerick Bosch <xpc.dev@gmail.com>",
@@ -25,13 +33,5 @@
     "typescript": "^3.9.7",
     "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12"
-  },
-  "scripts": {
-    "build": "webpack",
-    "watch": "webpack --watch",
-    "parse": "node bin/bank-schema-parser",
-    "clean": "rm -rf dist",
-    "test": "jest",
-    "postinstall": "webpack"
   }
 }
