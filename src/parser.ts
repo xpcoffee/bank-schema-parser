@@ -12,7 +12,7 @@ export function parseFromString({
   inputString,
   deduplicateTransactions,
 }: ParseStringParams): Promise<Statement> {
-  const lines = getStatementLinesFromString(inputString);
+  const lines = shouldParseWhole(fileType) ? getLineFromString(inputString) : getLinesFromString(inputString);
   const fn = getStatementParser(getParseFn(fileType), lines);
   const result = fn(inputString);
   return deduplicateTransactions ? result.then(deduplicateFn) : result;
@@ -37,12 +37,31 @@ export function getStatementParser(
 }
 
 /**
- * Yields each line of a string
+ * Creates a generator that yields the entirety of the given string
  */
-export async function* getStatementLinesFromString(statement: string) {
-  const lines = statement.split("\n");
-  for await (const line of lines) {
+export async function* getLineFromString(str: string) {
+  yield str;
+}
+
+/**
+ * Creats a generator that yields new each line of a string
+ */
+export async function* getLinesFromString(str: string) {
+  const lines = str.split("\n");
+  for (const line of lines) {
     yield line;
+  }
+}
+
+/**
+ * Determines if input should be parsed in its entirety (e.g. JSON input) or line-by-line (e.g. CSV input)
+ */
+function shouldParseWhole(fileType: FileType): boolean {
+  switch (fileType) {
+    case "bank-schema":
+      return true;
+    default:
+      return false;
   }
 }
 
