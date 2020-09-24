@@ -11,7 +11,18 @@ const parse: ParsingFunction = (memo: Statement, line: string): Statement => {
     };
   }
 
-  const maybeStatement = JSON.parse(line);
+  let maybeStatement;
+  try {
+    maybeStatement = JSON.parse(line);
+  } catch (e) {
+    return {
+      account: "unknown",
+      bank: "unkown",
+      transactions: [],
+      parsingErrors: [...memo.parsingErrors, "Unable to parse bank-schema JSON: " + e],
+    };
+  }
+
   const validationResult = validateStatement(maybeStatement);
 
   if (!validationResult.valid) {
@@ -19,7 +30,10 @@ const parse: ParsingFunction = (memo: Statement, line: string): Statement => {
       account: "unknown",
       bank: "unkown",
       transactions: [],
-      parsingErrors: ["The given input is not bank-schema compliant: " + validationResult.errors],
+      parsingErrors: [
+        ...memo.parsingErrors,
+        "The given input is not bank-schema compliant: " + validationResult.errors,
+      ],
     };
   }
 

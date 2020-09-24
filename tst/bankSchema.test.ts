@@ -24,8 +24,16 @@ describe("bank-schema", () => {
   });
 
   it("raises a warning when parsing multiple times", () => {
-    const result = [bankSchemaJsonString, "some other line"].reduce(definition.parse, getEmptyStatement());
+    const result = [bankSchemaJsonString, bankSchemaJsonString].reduce(definition.parse, getEmptyStatement());
 
     expect(result.parsingErrors).toHaveLength(1);
+    expect(result.parsingErrors[0].includes("parse function called more than once")).toBe(true);
+  });
+
+  it("raises an error if the given string cannot be parsed", () => {
+    const result = ["some other line"].reduce(definition.parse, getEmptyStatement());
+
+    expect(result.parsingErrors).toHaveLength(1);
+    expect(result.parsingErrors[0].includes("Unable to parse bank-schema JSON")).toBe(true);
   });
 });
