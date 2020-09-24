@@ -1,5 +1,5 @@
 import * as moment from "moment";
-import { Statement, Transaction, Banks } from "../types";
+import { Statement, Transaction, Banks, ParsingFunction } from "../types";
 import hash from "../hash";
 
 /**
@@ -9,7 +9,7 @@ import hash from "../hash";
  * @param memo - the statement with which the parsed data should be combined
  * @returns statement - the statement with more data parsed in
  */
-function parse(line: string, memo: Statement): Statement {
+const parse: ParsingFunction = (memo: Statement, line: string): Statement => {
   const statement = Object.assign({}, memo);
 
   try {
@@ -29,7 +29,7 @@ function parse(line: string, memo: Statement): Statement {
   }
 
   return statement;
-}
+};
 
 function transactionFromFnbLineSections(line: string): Transaction {
   const [date, amount, balance, description] = line.split(",");

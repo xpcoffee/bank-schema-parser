@@ -8,7 +8,7 @@ describe("standardbank", () => {
 
     const statement: StandardBankStatement = getEmptyStatement();
     statement.runningBalance = 100;
-    const parsedTransaction = definition.parse(transactionLine, statement).transactions[0];
+    const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
     expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
     expect(parsedTransaction.amountInZAR).toEqual(-150);
@@ -25,7 +25,7 @@ describe("standardbank", () => {
     ];
 
     let statement: StandardBankStatement = getEmptyStatement();
-    lines.forEach((line) => (statement = definition.parse(line, statement)));
+    lines.forEach((line) => (statement = definition.parse(statement, line)));
 
     expect(statement.runningBalance).toEqual(1100.21);
   });

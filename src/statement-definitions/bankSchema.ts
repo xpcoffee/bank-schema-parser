@@ -1,7 +1,7 @@
 import { validateStatement } from "@xpcoffee/bank-schema";
-import { Statement } from "../types";
+import { ParsingFunction, Statement } from "../types";
 
-function parse(line: string, memo: Statement): Statement {
+const parse: ParsingFunction = (memo: Statement, line: string): Statement => {
   if (Object.isFrozen(memo)) {
     return {
       ...memo,
@@ -25,7 +25,7 @@ function parse(line: string, memo: Statement): Statement {
 
   Object.freeze(maybeStatement);
   return maybeStatement as Statement;
-}
+};
 
 export default {
   fileType: "bank-schema" as const,

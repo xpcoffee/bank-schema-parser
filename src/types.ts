@@ -19,4 +19,4 @@ export enum Banks {
 }
 
 export type StatementParser = (file: string) => Promise<Statement>;
-export type ParsingFunction = (line: string, memo: Statement) => Statement;
+export type ParsingFunction = (memo: Statement, line: string) => Statement;

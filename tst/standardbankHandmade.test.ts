@@ -6,13 +6,13 @@ describe("standardBankBackfill", () => {
   it("extracts the account name", () => {
     const line = "ACCOUNT,10092563862,,,";
 
-    const statement = definition.parse(line, getEmptyStatement());
+    const statement = definition.parse(getEmptyStatement(), line);
     expect(statement.account).toEqual("10092563862");
   });
 
   it("parses the transactions", () => {
     const line = "HIST,MAGTAPE CREDIT TEST TRANSFER,500.00,2017-07-26,130500.00";
-    const transaction = definition.parse(line, getEmptyStatement()).transactions[0];
+    const transaction = definition.parse(getEmptyStatement(), line).transactions[0];
 
     expect(validateTransaction(transaction).valid).toBeTruthy();
     expect(transaction.amountInZAR).toEqual(500);

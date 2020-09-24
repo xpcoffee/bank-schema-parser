@@ -7,7 +7,7 @@ describe("fnb", () => {
   it("parses a transaction from a statement", () => {
     const transactionLine = `2019/08/01, -438.00, 82875.21, VIRGIN ACT4003863716:169314`;
     const statement: Statement = getEmptyStatement();
-    const parsedTransaction = definition.parse(transactionLine, statement).transactions[0];
+    const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
     expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
     expect(parsedTransaction.amountInZAR).toEqual(-438);

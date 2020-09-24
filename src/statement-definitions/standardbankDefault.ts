@@ -1,4 +1,4 @@
-import { Banks, Statement, Transaction } from "../types";
+import { Banks, ParsingFunction, Statement, Transaction } from "../types";
 import * as moment from "moment";
 import hash from "../hash";
 
@@ -9,7 +9,7 @@ import hash from "../hash";
  * @param memo - the statement with which the parsed data should be combined
  * @returns statement - the statement with more data parsed in
  */
-function parse(line: string, memo: StandardBankStatement): StandardBankStatement {
+const parse: ParsingFunction = (memo: StandardBankStatement, line: string): StandardBankStatement => {
   const statement = Object.assign({}, memo);
 
   try {
@@ -44,7 +44,7 @@ function parse(line: string, memo: StandardBankStatement): StandardBankStatement
   }
 
   return statement;
-}
+};
 
 export interface StandardBankStatement extends Statement {
   runningBalance?: number;

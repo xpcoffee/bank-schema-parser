@@ -2,6 +2,7 @@ import { getEmptyStatement } from "./statement";
 import statementDefinitions, { FileType } from "./statement-definitions";
 import { deduplicateTransactions as deduplicateFn } from "./deduplicate";
 import { ParsingFunction, Statement, StatementParser } from "./types";
+import { reduceAsync } from "./generators";
 
 /**
  * Parses a file string into a statement
@@ -31,11 +32,7 @@ export function getStatementParser(
   statementLines: AsyncGenerator<string>,
 ): StatementParser {
   return async function parseStatement() {
-    let memo = getEmptyStatement();
-    for await (const line of statementLines) {
-      memo = parsingFunction(line, memo);
-    }
-    return memo;
+    return await reduceAsync(statementLines, parsingFunction, getEmptyStatement());
   };
 }
 

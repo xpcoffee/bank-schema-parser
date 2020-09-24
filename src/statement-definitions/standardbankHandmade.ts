@@ -7,7 +7,7 @@ import * as moment from "moment";
  * PDF statements have fewer overall fields, but more transaction information that regular statements
  * (notably the transactions contain balances), so a different function is required to parse them.
  */
-const parse: ParsingFunction = function (line: string, memo: Statement): Statement {
+const parse: ParsingFunction = function (memo: Statement, line: string): Statement {
   const statement = Object.assign({}, memo);
 
   switch (getSection(line)) {
