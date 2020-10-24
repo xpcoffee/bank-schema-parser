@@ -1,5 +1,4 @@
 const path = require("path");
-const TerserPlugin = require("terser-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.ts",
@@ -24,9 +23,5 @@ module.exports = {
     filename: "index.js",
     library: "bank-schema-parser",
     libraryTarget: "umd",
-  },
-  optimization: {
-    minimize: true,
-    minimizer: [new TerserPlugin()],
-  },
+  }
 };
