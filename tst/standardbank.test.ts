@@ -10,10 +10,11 @@ describe("standardbank", () => {
     statement.runningBalance = 100;
     const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
-    expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
+    expect(statement.parsingErrors).toEqual([]);
+    expect(validateTransaction(parsedTransaction).errors).toEqual([]);
+    expect(parsedTransaction.timeStamp).toEqual("2018-11-21T00:00:00+02:00");
     expect(parsedTransaction.amountInZAR).toEqual(-150);
     expect(parsedTransaction.description).toEqual("bar");
-    expect(parsedTransaction.timeStamp).toEqual("2018-11-21T00:00:00+02:00");
     expect(parsedTransaction.balance).toEqual(-50);
   });
 

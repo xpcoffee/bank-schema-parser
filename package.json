@@ -1,7 +1,7 @@
 {
   "name": "@xpcoffee/bank-schema-parser",
   "scope": "@xpcoffee",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Functionality for parsing files into JSON which conforms to bank-schema",
   "scripts": {
     "build": "npm run clean && webpack",
@@ -23,14 +23,15 @@
   "author": "Emerick Bosch <xpc.dev@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "moment": "^2.24.0",
-    "@xpcoffee/bank-schema": "^1.0.0"
+    "@xpcoffee/bank-schema": "^1.0.0",
+    "luxon": "^1.25.0"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.11.5",
     "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.9.1",
+    "@types/luxon": "^1.25.0",
     "@types/node": "^11.9.5",
     "babel-jest": "^24.9.0",
     "jest": "^24.9.0",

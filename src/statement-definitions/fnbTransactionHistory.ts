@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { Statement, Transaction, Banks, ParsingFunction } from "../types";
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
@@ -46,12 +46,11 @@ function transactionFromFnbLineSections(line: string): Transaction {
 }
 
 function toTimestamp(dateString: string): string {
-  if (isNaN(Date.parse(dateString))) {
-    throw `Cannot convert to timestamp: ${dateString}`;
+  const parsedDate = DateTime.fromFormat(dateString, "yyyy/MM/dd");
+  if(parsedDate.invalidReason) {
+    throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
   }
-
-  const date = new Date(dateString);
-  return moment(date.toISOString()).format();
+  return parsedDate.toISO({suppressMilliseconds: true})
 }
 
 enum StatementSection {

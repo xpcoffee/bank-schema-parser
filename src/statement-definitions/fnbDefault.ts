@@ -1,4 +1,4 @@
-import * as moment from "moment";
+import { DateTime } from "luxon";
 import { Banks, ParsingFunction, Statement, Transaction } from "../types";
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
@@ -89,22 +89,40 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
 }
 
 function toTimestamp(dateString: string, startDate: Date, endDate: Date): string {
-  if (isNaN(Date.parse(dateString))) {
-    throw `Cannot convert to timestamp: ${dateString}`;
+  const dateWithoutYear = DateTime.fromFormat(dateString.replace(/'/g, "",), "d MMM");
+  if(dateWithoutYear.invalidReason) {
+    throw `Could not parse "${dateString}" into timestamp. ${dateWithoutYear.invalidExplanation}`;
+  }
+  if(dateWithoutYear.invalidReason) {
+    throw `Could not parse "${dateString}" into timestamp. ${dateWithoutYear.invalidExplanation}`;
+  }
+  const date = inferYear(dateWithoutYear, startDate, endDate);
+
+  return date.toISO({suppressMilliseconds: true});
+}
+
+// FNB dates in transactions don't contain the year - we need to infer the correct year
+function inferYear(transactionDate: DateTime, startDate: Date, endDate: Date) {
+  const startDateTime = DateTime.fromJSDate(startDate);
+  const endDateTime = DateTime.fromJSDate(endDate);
+
+  // Start with startDate year
+  let date = transactionDate.set({year: startDate.getFullYear()});
+
+  /* 
+   * Increase the year if the date doesn't fall in the statement's date range
+   *
+   * This happens in cases where a statement crosses the boundary of a year e.g. from December to March. 
+   * For these cases, if you take a March transaction and use the start date's year you end up with
+   * a date that falls before the start the statement period; the year needs to be increased.
+   * 
+   * Here we make an assumption that this statement format won't span multiple years.
+   */
+  if (date < startDateTime || date > endDateTime) {
+    date = date.set({year: date.year + 1})
   }
 
-  const date = new Date(dateString);
-
-  // FNB dates in transactions don't contain the year - we need to add the correct year
-  // 1. start by assigning the startDate year
-  date.setFullYear(startDate.getFullYear());
-
-  // 2.increase the year if the date doesn't fall in the statement's date range
-  while (!(date >= startDate && date <= endDate)) {
-    date.setFullYear(date.getFullYear() + 1);
-  }
-
-  return moment(date.toISOString()).format();
+  return date;
 }
 
 export interface FnbStatement extends Statement {
@@ -112,6 +130,10 @@ export interface FnbStatement extends Statement {
   endDate?: Date;
 }
 
+/*
+ * Defines the different sections of a default FNB statement
+ * The sections contain different bits of information and need to be parsed separately.
+ */
 enum StatementSection {
   AccountDetails,
   StatementInfo,
@@ -121,6 +143,10 @@ enum StatementSection {
   Unknown,
 }
 
+/*
+ * The FNB statement defines what section a line belongs to using a numerical prefix.
+ * This is the mapping of those numbers to their sections.
+ */
 const getSection = (line: string) => {
   if (line.startsWith("2")) {
     return StatementSection.AccountDetails;

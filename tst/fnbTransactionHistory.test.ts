@@ -9,7 +9,8 @@ describe("fnb", () => {
     const statement: Statement = getEmptyStatement();
     const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
-    expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
+    expect(statement.parsingErrors).toEqual([]);
+    expect(validateTransaction(parsedTransaction).errors).toEqual([]);
     expect(parsedTransaction.amountInZAR).toEqual(-438);
     expect(parsedTransaction.description).toEqual("VIRGIN ACT4003863716:169314");
     expect(parsedTransaction.timeStamp).toEqual("2019-08-01T00:00:00+02:00");

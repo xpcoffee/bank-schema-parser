@@ -1,6 +1,7 @@
 import { Banks, ParsingFunction, Statement, Transaction } from "../types";
 import hash from "../hash";
-import * as moment from "moment";
+import { DateTime } from "luxon";
+import { PassThrough } from "stream";
 
 /**
  * Parses statements that are "handmade" i.e. that have been created from PDF statements.
@@ -66,7 +67,13 @@ function toTransaction(line: string): Transaction {
 }
 
 function toTimestamp(dateString: string): string {
-  return moment(dateString).format();
+  const parsedDate = DateTime.fromFormat(dateString, "yyyy-MM-dd");
+
+  if(parsedDate.invalidReason) {
+    throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
+  }
+
+  return parsedDate.toISO({suppressMilliseconds: true});
 }
 
 export default {

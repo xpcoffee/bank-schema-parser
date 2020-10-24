@@ -14,7 +14,8 @@ describe("standardBankBackfill", () => {
     const line = "HIST,MAGTAPE CREDIT TEST TRANSFER,500.00,2017-07-26,130500.00";
     const transaction = definition.parse(getEmptyStatement(), line).transactions[0];
 
-    expect(validateTransaction(transaction).valid).toBeTruthy();
+    console.log(transaction);
+    expect(validateTransaction(transaction).errors).toEqual([]);
     expect(transaction.amountInZAR).toEqual(500);
     expect(transaction.balance).toEqual(130500);
     expect(transaction.description).toEqual("MAGTAPE CREDIT TEST TRANSFER");

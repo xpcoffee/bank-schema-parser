@@ -12,7 +12,8 @@ describe("fnb", () => {
 
     const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
-    expect(validateTransaction(parsedTransaction).valid).toBeTruthy();
+    expect(statement.parsingErrors).toEqual([]);
+    expect(validateTransaction(parsedTransaction).errors).toEqual([]);
     expect(parsedTransaction.amountInZAR).toEqual(150);
     expect(parsedTransaction.description).toEqual("bar");
     expect(parsedTransaction.timeStamp).toEqual("2019-09-25T00:00:00+02:00");
@@ -28,6 +29,7 @@ describe("fnb", () => {
 
     const parsedTransaction = definition.parse(statement, transactionLine).transactions[0];
 
+    expect(statement.parsingErrors).toEqual([]);
     expect(parsedTransaction.timeStamp).toEqual("2020-01-02T00:00:00+02:00");
   });
 });

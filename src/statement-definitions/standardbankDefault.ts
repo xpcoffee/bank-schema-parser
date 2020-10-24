@@ -1,5 +1,5 @@
 import { Banks, ParsingFunction, Statement, Transaction } from "../types";
-import * as moment from "moment";
+import { DateTime } from "luxon"
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
 
@@ -110,7 +110,15 @@ const toTransaction = (line: string, currentBalance: number): Transaction => {
  */
 const add = (a: number, b: number) => (100 * a + 100 * b) / 100;
 
-const toTimeStamp = (dateString: string) => moment(dateString).format();
+const toTimeStamp = (dateString: string) => {
+  const parsedDate = DateTime.fromFormat(dateString, "yyyy-MM-dd");
+
+  if(parsedDate.invalidReason) {
+    throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
+  }
+
+  return parsedDate.toISO({suppressMilliseconds: true})
+};
 
 const toDateString = (standardBankDateString: string): string =>
   [standardBankDateString.slice(0, 4), standardBankDateString.slice(4, 6), standardBankDateString.slice(6)].join("-");
