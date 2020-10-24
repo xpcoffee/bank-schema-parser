@@ -1,6 +1,7 @@
 import * as moment from "moment";
 import { Statement, Transaction, Banks, ParsingFunction } from "../types";
 import hash from "../hash";
+import { tryExtractMessage } from "../errors";
 
 /**
  * Function with which to parse a line from a downloaded FNB statement.
@@ -25,7 +26,8 @@ const parse: ParsingFunction = (memo: Statement, line: string): Statement => {
         break;
     }
   } catch (e) {
-    statement.parsingErrors.push(e);
+    const message = tryExtractMessage(e);
+    message && statement.parsingErrors.push(message);
   }
 
   return statement;

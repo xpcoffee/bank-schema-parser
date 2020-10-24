@@ -1,6 +1,7 @@
 import { Banks, ParsingFunction, Statement, Transaction } from "../types";
 import * as moment from "moment";
 import hash from "../hash";
+import { tryExtractMessage } from "../errors";
 
 /**
  * Parses a line from StandardBank statement.
@@ -40,7 +41,8 @@ const parse: ParsingFunction = (memo: StandardBankStatement, line: string): Stan
         }
     }
   } catch (e) {
-    statement.parsingErrors.push(e);
+    const message = tryExtractMessage(e);
+    message && statement.parsingErrors.push(message);
   }
 
   return statement;
