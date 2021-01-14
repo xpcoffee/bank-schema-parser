@@ -10,7 +10,7 @@ Script to parse bank statement files with known structure and produce a JSON obj
 - [StandardBank](https://www.standardbank.co.za/)
   - `DEFAULT` - this is for the CSV statements that gets sent to you every X months or that you download from the site.
   - `HANDMADE` - this is for the CSV statements are hand-crafter (e.g. for backfilling purposes).
-  
+
 If you need an additional format, please submit a pull-request or submit an issue.
 
 ## Dependencies
@@ -32,64 +32,10 @@ Install dependencies
 npm install
 ```
 
-## CLI 
-### Installing the CLI
+## CLI
 
-After installing the repo, you can further install the CLI for use with other command-line tooling.
+See [bank-schema-cli](https://github.com/xpcoffee/bank-schema-cli) for the command line interface of this library.
 
-```bash
-npm run build \
-&& npm -g install
-```
+## UI
 
-Try it out
-
-```bash
-bank-schema-parser --help
-```
-
-### Usage
-
-```bash
-Usage: bank-schema-parser --bank <bank> --filePath <filePath> [--type <type>]
-
-Options:
-  -V, --version              output the version number
-  -b, --bank <bank>          The bank who's statement will be parsed (default: false)
-  -f, --filePath <filePath>  The path to the file that should be parsed
-  -t, --type <type>          Use to specify the type of input file. Can be DEFAULT, TRANSACTION_HISTORY or HANDMADE. Uses DEFAULT if the option is unspecified.
-  -h, --help                 output usage information
-```
-
-### Example
-
-```bash
-yarn run parse --bank fnb -statement-file ~/Downloads/my-fnb-bank-statement.csv
-```
-
-## JSON output structure
-
-The output of the command has the following structure:
-
-```json
-{
-  "account": "1234567890",
-  "bank": "FNB",
-  "transactions": [
-    {
-      "timeStamp": "2019-01-01T00:00:00Z",
-      "amountInZAR": -5000,
-      "description": "SOME DESCRIPTION",
-      "hash": "2019-01-01T00:00:00Z-5000SOMEDESCRIPTION",
-      "balance": 11520
-    }
-  ],
-  "parsingErrors": ["some problem was encountered when doing X"]
-}
-```
-
-## Handmade statements
-
-Sometimes we can't get statements in CSV format and we need to manually enter the data.
-"Handmade" statements are statements with manually entered data that have a different
-format for ease of data-entry.
+See [bank-schema-ui](https://github.com/xpcoffee/bank-schema-ui) for the web-UI of this library.
