@@ -52,7 +52,11 @@ const parse: ParsingFunction = (memo: FnbStatement, line: string): FnbStatement 
           throw "Start date cannot be greater than the end date!";
         }
 
-        statement.transactions.push(transactionFromFnbLineSections(line, statement.startDate, statement.endDate));
+        // skip header/empty lines
+        if (!isTransactionHeaderRow(line) && line !== "") {
+          statement.transactions.push(transactionFromFnbLineSections(line, statement.startDate, statement.endDate));
+        }
+
         break;
     }
   } catch (e) {
@@ -62,6 +66,10 @@ const parse: ParsingFunction = (memo: FnbStatement, line: string): FnbStatement 
 
   return statement;
 };
+
+function isTransactionHeaderRow(line: string): boolean {
+  return line.includes("'Transactions'") || line.includes("'Date'") || line === "5";
+}
 
 function transactionFromFnbLineSections(line: string, startDate: Date, endDate: Date): Transaction {
   const [
@@ -89,16 +97,16 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
 }
 
 function toTimestamp(dateString: string, startDate: Date, endDate: Date): string {
-  const dateWithoutYear = DateTime.fromFormat(dateString.replace(/'/g, "",), "d MMM");
-  if(dateWithoutYear.invalidReason) {
+  const dateWithoutYear = DateTime.fromFormat((dateString || "").replace(/'/g, ""), "d MMM");
+  if (dateWithoutYear.invalidReason) {
     throw `Could not parse "${dateString}" into timestamp. ${dateWithoutYear.invalidExplanation}`;
   }
-  if(dateWithoutYear.invalidReason) {
+  if (dateWithoutYear.invalidReason) {
     throw `Could not parse "${dateString}" into timestamp. ${dateWithoutYear.invalidExplanation}`;
   }
   const date = inferYear(dateWithoutYear, startDate, endDate);
 
-  return date.toISO({suppressMilliseconds: true});
+  return date.toISO({ suppressMilliseconds: true });
 }
 
 // FNB dates in transactions don't contain the year - we need to infer the correct year
@@ -107,19 +115,19 @@ function inferYear(transactionDate: DateTime, startDate: Date, endDate: Date) {
   const endDateTime = DateTime.fromJSDate(endDate);
 
   // Start with startDate year
-  let date = transactionDate.set({year: startDate.getFullYear()});
+  let date = transactionDate.set({ year: startDate.getFullYear() });
 
-  /* 
+  /*
    * Increase the year if the date doesn't fall in the statement's date range
    *
-   * This happens in cases where a statement crosses the boundary of a year e.g. from December to March. 
+   * This happens in cases where a statement crosses the boundary of a year e.g. from December to March.
    * For these cases, if you take a March transaction and use the start date's year you end up with
    * a date that falls before the start the statement period; the year needs to be increased.
-   * 
+   *
    * Here we make an assumption that this statement format won't span multiple years.
    */
   if (date < startDateTime || date > endDateTime) {
-    date = date.set({year: date.year + 1})
+    date = date.set({ year: date.year + 1 });
   }
 
   return date;
