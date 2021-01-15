@@ -1,6 +1,7 @@
 import { validateTransaction } from "@xpcoffee/bank-schema";
 import { getEmptyStatement } from "../src/statement";
 import definition, { FnbStatement } from "../src/statement-definitions/fnbDefault";
+import { Currencies } from "../src/types";
 
 describe("fnb", () => {
   it("parses a transaction from a statement", () => {
@@ -14,7 +15,8 @@ describe("fnb", () => {
 
     expect(statement.parsingErrors).toEqual([]);
     expect(validateTransaction(parsedTransaction).errors).toEqual([]);
-    expect(parsedTransaction.amountInZAR).toEqual(150);
+    expect(parsedTransaction.amount).toEqual(150);
+    expect(parsedTransaction.currency).toEqual(Currencies.SouthAfricaRand);
     expect(parsedTransaction.description).toEqual("bar");
     expect(parsedTransaction.timeStamp).toEqual("2019-09-25T00:00:00+02:00");
   });

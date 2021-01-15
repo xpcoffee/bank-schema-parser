@@ -1,9 +1,10 @@
 import { getEmptyStatement } from "../src/statement";
 import definition from "../src/statement-definitions/bankSchema";
+import { Currencies } from "../src/types";
 
 describe("bank-schema", () => {
   const bankSchemaJsonString =
-    '{"bank": "foo", "account": "bar", "transactions": [ { "hash":"foobarbaz", "amountInZAR": 15.2, "description": "baz", "timeStamp":"2020-09-01T15:00:00Z", "balance": 0 }]}';
+    '{"bank": "foo", "account": "bar", "transactions": [ { "hash":"foobarbaz", "amount": 15.2, "currency": "ZAR", "description": "baz", "timeStamp":"2020-09-01T15:00:00Z", "balance": 0 }]}';
 
   it("parses a statement from a single string", () => {
     const result = definition.parse(getEmptyStatement(), bankSchemaJsonString);
@@ -17,7 +18,8 @@ describe("bank-schema", () => {
     expect(result.transactions).toHaveLength(1);
     const transaction = result.transactions[0];
     expect(transaction.hash).toEqual("foobarbaz");
-    expect(transaction.amountInZAR).toEqual(15.2);
+    expect(transaction.amount).toEqual(15.2);
+    expect(transaction.currency).toEqual(Currencies.SouthAfricaRand);
     expect(transaction.balance).toEqual(0);
     expect(transaction.description).toEqual("baz");
     expect(transaction.timeStamp).toEqual("2020-09-01T15:00:00Z");

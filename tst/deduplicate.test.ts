@@ -1,5 +1,6 @@
 import { getEmptyStatement } from "../src/statement";
 import { deduplicateTransactions } from "../src/deduplicate";
+import { Currencies } from "../src/types";
 
 describe("deduplicate", () => {
   it("should deduplicate entries by modifying the hash", () => {
@@ -7,7 +8,8 @@ describe("deduplicate", () => {
     const txn = {
       timeStamp: "foo",
       description: "bar",
-      amountInZAR: 20,
+      amount: 20,
+      currency: Currencies.SouthAfricaRand,
       hash: "1234",
       balance: 10,
     };

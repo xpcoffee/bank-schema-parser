@@ -1,4 +1,4 @@
-import { Banks, ParsingFunction, Statement, Transaction } from "../types";
+import { Banks, ParsingFunction, Statement, Transaction, Currencies } from "../types";
 import hash from "../hash";
 import { DateTime } from "luxon";
 import { PassThrough } from "stream";
@@ -55,7 +55,8 @@ function toTransaction(line: string): Transaction {
   return {
     description: desc,
     balance: Number(balance),
-    amountInZAR: Number(amount),
+    amount: Number(amount),
+    currency: Currencies.SouthAfricaRand,
     timeStamp: toTimestamp(date),
     /**
      * [NB]: We do not include the balance in the hash: normal statements do not
@@ -69,11 +70,11 @@ function toTransaction(line: string): Transaction {
 function toTimestamp(dateString: string): string {
   const parsedDate = DateTime.fromFormat(dateString, "yyyy-MM-dd");
 
-  if(parsedDate.invalidReason) {
+  if (parsedDate.invalidReason) {
     throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
   }
 
-  return parsedDate.toISO({suppressMilliseconds: true});
+  return parsedDate.toISO({ suppressMilliseconds: true });
 }
 
 export default {

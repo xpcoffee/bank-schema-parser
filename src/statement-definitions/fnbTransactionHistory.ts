@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { Statement, Transaction, Banks, ParsingFunction } from "../types";
+import { Statement, Transaction, Banks, ParsingFunction, Currencies } from "../types";
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
 
@@ -38,7 +38,8 @@ function transactionFromFnbLineSections(line: string): Transaction {
 
   return {
     description: description.trim(),
-    amountInZAR: Number(amount),
+    amount: Number(amount),
+    currency: Currencies.SouthAfricaRand,
     timeStamp: toTimestamp(date),
     hash: hash(line),
     balance: Number(balance),
@@ -47,10 +48,10 @@ function transactionFromFnbLineSections(line: string): Transaction {
 
 function toTimestamp(dateString: string): string {
   const parsedDate = DateTime.fromFormat(dateString, "yyyy/MM/dd");
-  if(parsedDate.invalidReason) {
+  if (parsedDate.invalidReason) {
     throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
   }
-  return parsedDate.toISO({suppressMilliseconds: true})
+  return parsedDate.toISO({ suppressMilliseconds: true });
 }
 
 enum StatementSection {

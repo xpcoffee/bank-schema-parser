@@ -1,6 +1,7 @@
 import { validateTransaction } from "@xpcoffee/bank-schema";
 import { getEmptyStatement } from "../src/statement";
 import definition, { StandardBankStatement } from "../src/statement-definitions/standardbankDefault";
+import { Currencies } from "../src/types";
 
 describe("standardbank", () => {
   it("parses a transaction from a statement", () => {
@@ -13,7 +14,8 @@ describe("standardbank", () => {
     expect(statement.parsingErrors).toEqual([]);
     expect(validateTransaction(parsedTransaction).errors).toEqual([]);
     expect(parsedTransaction.timeStamp).toEqual("2018-11-21T00:00:00+02:00");
-    expect(parsedTransaction.amountInZAR).toEqual(-150);
+    expect(parsedTransaction.amount).toEqual(-150);
+    expect(parsedTransaction.currency).toEqual(Currencies.SouthAfricaRand);
     expect(parsedTransaction.description).toEqual("bar");
     expect(parsedTransaction.balance).toEqual(-50);
   });

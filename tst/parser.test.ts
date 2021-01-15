@@ -7,7 +7,8 @@ describe("parseFromString", () => {
       "transactions": [ 
           { 
               "hash":"foobarbaz", 
-              "amountInZAR": 15.2, 
+              "amount": 15.2, 
+              "currency": "ZAR", 
               "description": "baz", 
               "timeStamp":"2020-09-01T15:00:00Z", 
               "balance": 0 

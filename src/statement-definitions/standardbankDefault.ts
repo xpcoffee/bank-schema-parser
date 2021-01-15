@@ -1,5 +1,5 @@
-import { Banks, ParsingFunction, Statement, Transaction } from "../types";
-import { DateTime } from "luxon"
+import { Banks, ParsingFunction, Statement, Transaction, Currencies } from "../types";
+import { DateTime } from "luxon";
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
 
@@ -89,7 +89,8 @@ const toTransaction = (line: string, currentBalance: number): Transaction => {
   const newBalance = add(currentBalance, amount);
 
   return {
-    amountInZAR: amount,
+    amount: amount,
+    currency: Currencies.SouthAfricaRand,
     description: description,
     timeStamp: toTimeStamp(toDateString(stdBankDateString)),
     /**
@@ -113,11 +114,11 @@ const add = (a: number, b: number) => (100 * a + 100 * b) / 100;
 const toTimeStamp = (dateString: string) => {
   const parsedDate = DateTime.fromFormat(dateString, "yyyy-MM-dd");
 
-  if(parsedDate.invalidReason) {
+  if (parsedDate.invalidReason) {
     throw `Could not parse "${dateString}" into timestamp. ${parsedDate.invalidExplanation}`;
   }
 
-  return parsedDate.toISO({suppressMilliseconds: true})
+  return parsedDate.toISO({ suppressMilliseconds: true });
 };
 
 const toDateString = (standardBankDateString: string): string =>

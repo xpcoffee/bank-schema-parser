@@ -7,7 +7,8 @@ export interface Statement {
 
 export interface Transaction {
   timeStamp: string;
-  amountInZAR: number;
+  amount: number;
+  currency: string;
   description: string;
   hash: string;
   balance: number;
@@ -16,6 +17,10 @@ export interface Transaction {
 export enum Banks {
   FNB = "fnb",
   StandardBank = "standardbank",
+}
+
+export enum Currencies {
+  SouthAfricaRand = "ZAR",
 }
 
 export type StatementParser = (file: string) => Promise<Statement>;

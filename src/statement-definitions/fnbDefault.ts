@@ -1,5 +1,5 @@
 import { DateTime } from "luxon";
-import { Banks, ParsingFunction, Statement, Transaction } from "../types";
+import { Banks, ParsingFunction, Statement, Transaction, Currencies } from "../types";
 import hash from "../hash";
 import { tryExtractMessage } from "../errors";
 
@@ -89,7 +89,8 @@ function transactionFromFnbLineSections(line: string, startDate: Date, endDate: 
 
   return {
     description: nonEmptyDescription,
-    amountInZAR: Number(amount),
+    amount: Number(amount),
+    currency: Currencies.SouthAfricaRand,
     timeStamp: toTimestamp(date, startDate, endDate),
     hash: hash(line),
     balance: Number(balance),
