@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "@xpcoffee/bank-schema": "^2.0.0",
-    "luxon": "^1.25.0"
+    "luxon": "^2.5.2"
   },
   "devDependencies": {
     "@babel/core": "^7.4.0",
